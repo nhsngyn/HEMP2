@@ -72,8 +72,8 @@ function App() {
           className="w-full flex flex-col"
           style={{
             paddingTop: "51px",
-            paddingLeft: "24px",
-            paddingRight: "24px",
+            paddingLeft: "clamp(12px, 3vw, 24px)",
+            paddingRight: "clamp(12px, 3vw, 24px)",
             paddingBottom: "24px",
             gap: "12px",
             minHeight: "100vh",
@@ -83,46 +83,61 @@ function App() {
           <header
             id="dashboard-header"
             className="shrink-0 flex flex-col"
-            style={{ gap: "1px", marginBottom: "24px" }}
+            style={{ gap: "1px", marginBottom: "clamp(16px, 4vw, 24px)" }}
           >
-            <p className="text-body2-sb text-gray-400">
+            <p className="text-body2-sb md:text-body2-sb text-sm text-gray-400">
               Deeper Analysis on Blockchains
             </p>
-            <h1 className="text-title2-sb text-gray-100">
+            <h1 className="text-title2-sb md:text-title2-sb text-xl text-gray-100">
               HEMP: Health Evaluation Metric using Proposals
             </h1>
           </header>
 
+          {/* 버블차트 + 레이더차트 - 데스크톱: 가로, 모바일: 세로 */}
           <div
-            className="flex w-full"
-            style={{ gap: "12px", height: "350px" }}
+            className="flex flex-col md:flex-row w-full"
+            style={{ gap: "12px" }}
           >
           <div
-            className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+            className="w-full md:w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
+            style={{ 
+              backgroundColor: COLORS.GRAYBG, 
+              padding: "20px 0",
+              height: "350px",
+              minHeight: "300px"
+            }}
           >
             <HempMap />
           </div>
 
           <div
-            className="h-full w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+            className="w-full md:w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
+            style={{ 
+              backgroundColor: COLORS.GRAYBG, 
+              padding: "20px 0",
+              height: "350px",
+              minHeight: "300px"
+            }}
           >
             <RadarChart />
           </div>
           </div>
 
+          {/* 생키차트 - 데스크톱: viewport 기반, 모바일: 고정 높이 */}
           <div
             className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               marginBottom: "59px",
-              height: "calc(100vh - 51px - 88px - 350px - 12px - 59px)",
-              minHeight: "300px",
               padding: "20px 0" 
             }}
           >
-            <SankeyChart />
+            <div className="hidden md:block w-full" style={{ height: "calc(100vh - 51px - 88px - 350px - 12px - 59px)", minHeight: "300px" }}>
+              <SankeyChart />
+            </div>
+            <div className="block md:hidden w-full" style={{ height: "400px" }}>
+              <SankeyChart />
+            </div>
           </div>
         </section>
 
@@ -130,8 +145,8 @@ function App() {
           id="proposals-section"
           className="w-full"
           style={{
-            paddingLeft: "24px",
-            paddingRight: "24px",
+            paddingLeft: "clamp(12px, 3vw, 24px)",
+            paddingRight: "clamp(12px, 3vw, 24px)",
             paddingBottom: "24px",
             boxSizing: "border-box",
           }}
