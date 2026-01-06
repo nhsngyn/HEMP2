@@ -1,13 +1,14 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import useChainStore from '../../store/useChainStore';
 import useChainSelection from '../../hooks/useChainSelection';
 import { BUBBLE_CHART } from '../../constants/chart';
 import { COLORS } from '../../constants/colors';
-import LoadingSpinner from '../common/LoadingSpinner';
+import HempMapSkeleton from '../skeletons/HempMapSkeleton';
 
 const HempMap = () => {
   const chartRef = useRef(null);
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   const {
     allChains,
@@ -18,6 +19,18 @@ const HempMap = () => {
   } = useChainStore();
 
   const { selectChain, getSelectionInfo } = useChainSelection();
+
+  // Skeleton 전환 로직 (최소 300ms 대기)
+  useEffect(() => {
+    if (!isLoading && allChains.length > 0) {
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (isLoading || allChains.length === 0) {
+      setShowSkeleton(true);
+    }
+  }, [isLoading, allChains.length]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -357,21 +370,25 @@ const HempMap = () => {
         </div>
       </div>
 
-      {isLoading && allChains.length === 0 ? (
-        <LoadingSpinner message="Loading chains..." size="sm" />
-      ) : (
-        <ReactECharts
-          ref={chartRef}
-          option={option}
-          style={{ width: '100%', height: '100%' }}
-          opts={{ renderer: 'canvas' }}
-          onEvents={{
-            click: onChartClick,
-            mouseover: handleChartMouseOver,
-            mouseout: handleChartMouseOut,
-          }}
-        />
-      )}
+      <div className="transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0 }}>
+        {showSkeleton && <HempMapSkeleton showShimmer={true} />}
+      </div>
+      
+      <div className="transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1 }}>
+        {!showSkeleton && (
+          <ReactECharts
+            ref={chartRef}
+            option={option}
+            style={{ width: '100%', height: '100%' }}
+            opts={{ renderer: 'canvas' }}
+            onEvents={{
+              click: onChartClick,
+              mouseover: handleChartMouseOver,
+              mouseout: handleChartMouseOut,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };
