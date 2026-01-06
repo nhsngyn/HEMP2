@@ -365,9 +365,18 @@ const RadarChart = () => {
       )}
 
       {/* 실제 차트 (항상 렌더링) */}
-      <div className="absolute inset-0 transition-opacity duration-300 overflow-y-auto md:overflow-hidden" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
+      <div 
+        className="absolute transition-opacity duration-300 overflow-y-auto overflow-x-hidden md:overflow-hidden" 
+        style={{ 
+          opacity: showSkeleton ? 0 : 1, 
+          top: '30px',
+          left: 0,
+          right: 0,
+          bottom: 0
+        }}
+      >
         <div
-          className="radar_arena w-full min-h-full flex flex-col md:flex-row my-1"
+          className="radar_arena w-full flex flex-col md:flex-row md:h-full my-1"
           style={{
             gap: 'clamp(16px, 1.5vw, 24px)',
             padding: 'clamp(8px, 0.6vw, 12px)'
