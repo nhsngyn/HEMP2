@@ -114,7 +114,7 @@ function App() {
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               padding: "20px 0",
-              height: "clamp(550px, 80vh, 650px)" // 모바일/데스크톱 모두 더 크게 (메트릭 정보 겹침 방지)
+              height: "clamp(550px, 80vh, 350px)" // 모바일: 550px, 데스크톱: 350px (원래대로)
             }}
           >
             <RadarChart />
