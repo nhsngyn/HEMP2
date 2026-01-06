@@ -365,16 +365,16 @@ const RadarChart = () => {
       )}
 
       {/* 실제 차트 (항상 렌더링) */}
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
+      <div className="absolute inset-0 transition-opacity duration-300 overflow-y-auto md:overflow-hidden" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
         <div
-          className="radar_arena w-full h-full flex flex-col md:flex-row my-1 min-h-0"
+          className="radar_arena w-full min-h-full flex flex-col md:flex-row my-1"
           style={{
             gap: 'clamp(16px, 1.5vw, 24px)',
             padding: 'clamp(8px, 0.6vw, 12px)'
           }}
         >
-            {/* 레이더 차트 - 데스크톱: 65%, 모바일: 상단 60% */}
-            <div ref={radarContainerRef} className="w-full md:w-[65%] h-[60%] md:h-full">
+            {/* 레이더 차트 - 데스크톱: 65%, 모바일: 고정 350px 높이 */}
+            <div ref={radarContainerRef} className="w-full md:w-[65%] md:h-full" style={{ height: '350px' }}>
               <svg ref={svgRef} className="w-full h-full mt-4" />
             </div>
 
@@ -382,16 +382,17 @@ const RadarChart = () => {
         <div className="md:hidden border-t border-gray-700 mx-auto" style={{ width: '99%' }}></div>
         <div className="hidden md:block border-r border-gray-700 my-auto" style={{ height: '99%' }}></div>
 
-        {/* 점수 정보 - 데스크톱: 우측 35%, 모바일: 하단 40% */}
+        {/* 점수 정보 - 데스크톱: 우측 35%, 모바일: 하단 auto */}
         <div
-          className="info_arena w-full md:w-[35%] h-[40%] md:h-full flex flex-col min-h-0 overflow-hidden"
+          className="info_arena w-full md:w-[35%] md:h-full flex flex-col md:min-h-0 md:overflow-hidden"
           style={{
-            gap: 'clamp(4px, 0.5vh, 8px)',
-            paddingTop: 'clamp(2px, 0.6vw, 2px)',
-            paddingBottom: 'clamp(2px, 0.6vw, 10px)',
+            gap: 'clamp(8px, 1vh, 12px)',
+            paddingTop: 'clamp(4px, 0.5vh, 6px)',
+            paddingBottom: 'clamp(4px, 0.5vh, 6px)',
             paddingLeft: 'clamp(2px, 0.7vw, 2px)',
             paddingRight: 'clamp(4px, 0.7vw, 6px)',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            minHeight: 'auto'
           }}
         >
           {/* Chain name badge 또는 Median 레이블 */}
