@@ -95,7 +95,7 @@ function App() {
 
           <div
             className="flex w-full"
-            style={{ gap: "12px", height: "294px" }}
+            style={{ gap: "12px", minHeight: "350px" }}
           >
           <div
             className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
@@ -117,7 +117,7 @@ function App() {
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               marginBottom: "59px",
-              height: "calc(100vh - 51px - 88px - 294px - 12px - 59px)",
+              height: "calc(100vh - 51px - 88px - 350px - 12px - 59px)",
               minHeight: "300px",
               padding: "20px 0" 
             }}
