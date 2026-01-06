@@ -364,25 +364,25 @@ const RadarChart = () => {
       <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
         {!showSkeleton && (
           <div
-            className="radar_arena w-full h-full flex my-1 min-h-0"
+            className="radar_arena w-full h-full flex flex-col md:flex-row my-1 min-h-0"
             style={{
               gap: 'clamp(16px, 1.5vw, 24px)',
               padding: 'clamp(8px, 0.6vw, 12px)'
             }}
           >
-            {/* 왼쪽: 레이더 차트 (60%) */}
-            <div ref={radarContainerRef} className="h-full" style={{ width: '65%' }}>
+            {/* 레이더 차트 - 데스크톱: 65%, 모바일: 상단 60% */}
+            <div ref={radarContainerRef} className="w-full md:w-[65%] h-[60%] md:h-full">
               <svg ref={svgRef} className="w-full h-full mt-4" />
             </div>
 
-        {/* Divider */}
-        <div className="border-r border-gray-700 my-auto" style={{ height: '99%' }}></div>
+        {/* Divider - 데스크톱: 세로선, 모바일: 가로선 */}
+        <div className="md:hidden border-t border-gray-700 mx-auto" style={{ width: '99%' }}></div>
+        <div className="hidden md:block border-r border-gray-700 my-auto" style={{ height: '99%' }}></div>
 
-        {/* 오른쪽: 점수 정보 (40%) */}
+        {/* 점수 정보 - 데스크톱: 우측 35%, 모바일: 하단 40% */}
         <div
-          className="info_arena h-full flex flex-col min-h-0 overflow-hidden"
+          className="info_arena w-full md:w-[35%] h-[40%] md:h-full flex flex-col min-h-0 overflow-hidden"
           style={{
-            width: '35%',
             gap: 'clamp(4px, 0.5vh, 8px)',
             paddingTop: 'clamp(2px, 0.6vw, 2px)',
             paddingBottom: 'clamp(2px, 0.6vw, 10px)',
@@ -500,7 +500,7 @@ const RadarChart = () => {
             className="flex flex-col min-h-0 overflow-hidden"
             style={{
               flex: '6.5 0 0',
-              gap: 'clamp(1px, 0.2vh, 3px)',
+              gap: 'clamp(8px, 1vh, 12px)', // 간격 증가: 1px -> 8px, 3px -> 12px
               maxHeight: '100%',
               justifyContent: 'space-between'
             }}
@@ -515,8 +515,8 @@ const RadarChart = () => {
                   className="flex justify-between items-center shrink-0"
                   style={{
                     gap: 'clamp(6px, 0.8vw, 12px)',
-                    paddingTop: 'clamp(0px, 0.1vh, 2px)',
-                    paddingBottom: 'clamp(0px, 0.1vh, 2px)',
+                    paddingTop: 'clamp(4px, 0.5vh, 6px)', // 상단 패딩 증가
+                    paddingBottom: 'clamp(4px, 0.5vh, 6px)', // 하단 패딩 증가
                     minHeight: 0,
                     flex: '1 1 0'
                   }}

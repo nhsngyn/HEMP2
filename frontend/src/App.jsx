@@ -71,7 +71,7 @@ function App() {
         <section
           className="w-full flex flex-col"
           style={{
-            paddingTop: "51px",
+            paddingTop: "clamp(60px, 8vw, 51px)", // 모바일: 60px (햄버거 버튼 공간), 데스크톱: 51px
             paddingLeft: "clamp(12px, 3vw, 24px)",
             paddingRight: "clamp(12px, 3vw, 24px)",
             paddingBottom: "24px",
@@ -103,8 +103,7 @@ function App() {
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               padding: "20px 0",
-              height: "350px",
-              minHeight: "300px"
+              height: "clamp(300px, 50vh, 350px)" // 모바일: 반응형, 데스크톱: 350px
             }}
           >
             <HempMap />
@@ -115,29 +114,24 @@ function App() {
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               padding: "20px 0",
-              height: "350px",
-              minHeight: "300px"
+              height: "clamp(550px, 80vh, 650px)" // 모바일/데스크톱 모두 더 크게 (메트릭 정보 겹침 방지)
             }}
           >
             <RadarChart />
           </div>
           </div>
 
-          {/* 생키차트 - 데스크톱: viewport 기반, 모바일: 고정 높이 */}
+          {/* 생키차트 - 가로 스크롤 가능하므로 더 크게 */}
           <div
             className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
-              marginBottom: "59px",
-              padding: "20px 0" 
+              marginBottom: "clamp(12px, 3vw, 59px)",
+              padding: "20px 0",
+              height: "clamp(500px, 80vh, 600px)" // 모바일/데스크톱 모두 더 크게
             }}
           >
-            <div className="hidden md:block w-full" style={{ height: "calc(100vh - 51px - 88px - 350px - 12px - 59px)", minHeight: "300px" }}>
-              <SankeyChart />
-            </div>
-            <div className="block md:hidden w-full" style={{ height: "400px" }}>
-              <SankeyChart />
-            </div>
+            <SankeyChart />
           </div>
         </section>
 

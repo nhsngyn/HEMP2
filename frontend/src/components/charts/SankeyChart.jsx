@@ -370,10 +370,11 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       // Clear previous render
       d3.select(svgRef.current).selectAll('*').remove();
 
-      const containerWidth = containerRef.current.clientWidth || width;
+      // 고정 너비로 설정하여 가로 스크롤 가능하도록
+      const containerWidth = 1800; // 고정 너비
       const containerHeight = containerRef.current.clientHeight || height;
 
-      if (containerWidth === 0 || containerHeight === 0) {
+      if (containerHeight === 0) {
         setTimeout(drawChart, 100);
         return;
       }
@@ -398,10 +399,13 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
           .attr('class', 'error-message')
           .attr('transform', `translate(${containerWidth / 2}, ${containerHeight / 2})`);
 
+        // 스케일 값 가져오기
+        const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
+        
         errorGroup.append('text')
           .attr('text-anchor', 'middle')
           .attr('fill', '#ef4444')
-          .attr('font-size', '20px')
+          .attr('font-size', `${20 * scale}px`)
           .attr('font-weight', 'bold')
           .attr('font-family', 'SUIT')
           .attr('y', -20)
@@ -410,7 +414,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         errorGroup.append('text')
           .attr('text-anchor', 'middle')
           .attr('fill', '#fca5a5')
-          .attr('font-size', '14px')
+          .attr('font-size', `${14 * scale}px`)
           .attr('font-family', 'SUIT')
           .attr('y', 10)
           .text(`Reason: ${reason}`);
@@ -419,7 +423,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
           errorGroup.append('text')
             .attr('text-anchor', 'middle')
             .attr('fill', '#9ca3af')
-            .attr('font-size', '12px')
+            .attr('font-size', `${12 * scale}px`)
             .attr('font-family', 'SUIT')
             .attr('y', 30)
             .text(detail);
@@ -427,12 +431,13 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       };
 
       if (!mainChain) {
+        const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
         svg.append('text')
           .attr('x', containerWidth / 2)
           .attr('y', containerHeight / 2)
           .attr('text-anchor', 'middle')
           .attr('fill', '#9ca3af')
-          .attr('font-size', '18px')
+          .attr('font-size', `${18 * scale}px`)
           .attr('font-family', 'SUIT')
           .text('Select a MAIN CHAIN to view Sankey diagram');
         return;
@@ -817,6 +822,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       };
 
       // Add node labels (centered on node with 8px offset)
+      const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
       const maxColumn = Math.max(...nodes.map(n => n.column));
       node
         .append('text')
@@ -833,7 +839,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         .attr('y', (d) => (d.y0 + d.y1) / 2) // Vertical center
         .attr('dy', '0.35em')
         .attr('text-anchor', (d) => d.column === maxColumn ? 'end' : 'start')
-        .attr('font-size', '12px')
+        .attr('font-size', `${12 * scale}px`)
         .attr('font-weight', (d) => isNodeSelected(d) ? '700' : '500')
         .attr('fill', (d) => isNodeSelected(d) ? '#FFFFFF' : '#D1D5DB')
         .attr('pointer-events', 'none')
@@ -864,7 +870,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
             .attr('fill', '#6D7380')
-            .attr('font-size', '12px')
+            .attr('font-size', `${12 * scale}px`)
             .attr('font-weight', '700')
             .attr('font-family', 'SUIT')
             .attr('pointer-events', 'none');
@@ -876,7 +882,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
           textGroup.append('tspan')
             .attr('x', labelX)
-            .attr('dy', '14px')
+            .attr('dy', `${14 * scale}px`)
             .text('Speed');
         } else {
           svg.append('text')
@@ -884,7 +890,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
             .attr('fill', '#6D7380')
-            .attr('font-size', '12px')
+            .attr('font-size', `${12 * scale}px`)
             .attr('font-weight', '700')
             .attr('font-family', 'SUIT')
             .attr('pointer-events', 'none')
@@ -1003,10 +1009,23 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
       </div>
 
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
+      <div className="absolute inset-0 transition-opacity duration-300 flex flex-col" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
         {!showSkeleton && (
-          <div className="flex-1 min-h-0 relative" style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
-            <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+          <div className="flex-1 min-h-0 relative overflow-x-auto overflow-y-hidden" 
+            style={{ 
+              width: '100%', 
+              height: '100%',
+              transform: 'rotateX(180deg)' // 스크롤바를 상단으로
+            }}
+          >
+            <div style={{ 
+              minWidth: '1800px', // 더 넓게
+              width: '1800px',
+              height: '100%',
+              transform: 'rotateX(180deg)' // 콘텐츠는 원래대로
+            }}>
+              <svg ref={svgRef} style={{ width: '100%', height: '100%', overflow: 'visible' }} />
+            </div>
           </div>
         )}
       </div>

@@ -121,8 +121,12 @@ const ProposalsTable = ({ mainChain }) => {
         </h2> <span className="text-gray-500 text-body1-sb"> {filteredPropositions.length}</span>
       </div>
 
-      <div className="overflow-x-auto flex-1 min-h-0">
-        <table className="w-full">
+      <div 
+        className="overflow-x-auto flex-1 min-h-0"
+        style={{ transform: 'rotateX(180deg)' }}
+      >
+        <div style={{ transform: 'rotateX(180deg)' }}>
+          <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800 ">
               <th
@@ -290,6 +294,7 @@ const ProposalsTable = ({ mainChain }) => {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
