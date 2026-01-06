@@ -117,7 +117,7 @@ const HempMap = () => {
         left: 83,
         right: 24,
         top: 48,
-        bottom: 28,
+        bottom: 40,
         containLabel: false,
       },
 
