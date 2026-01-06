@@ -95,7 +95,7 @@ function App() {
 
           <div
             className="flex w-full"
-            style={{ gap: "12px", minHeight: "350px" }}
+            style={{ gap: "12px", height: "350px" }}
           >
           <div
             className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
