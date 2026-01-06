@@ -981,9 +981,9 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   }, [width, height, mainChain, sankeyData, hasPropositionsData, selectedLink]);
 
   return (
-    <div ref={containerRef} className="w-full h-full absolute inset-0 flex flex-col" style={{ overflow: 'visible' }}>
+    <div ref={containerRef} className="w-full h-full absolute inset-0 flex flex-col" style={{ overflow: 'visible', padding: '20px 0' }}>
       {/* Title with icon - absolute positioned */}
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4 py-3">
+      <div className="absolute top-5 left-0 z-10 flex items-center gap-3 px-4">
         <div
           className="flex items-center justify-center rounded-full text-caption1-sb"
           style={{
@@ -1003,7 +1003,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         </h2>
       </div>
       {/* Chart area */}
-      <div className="flex-1 min-h-0 relative" style={{ marginTop: '4px', padding: '20px 0', overflow: 'hidden' }}>
+      <div className="flex-1 min-h-0 relative" style={{ marginTop: '54px', overflow: 'hidden' }}>
         <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
       </div>
 
