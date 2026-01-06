@@ -114,10 +114,10 @@ const HempMap = () => {
       textStyle: { fontFamily: 'SUIT' },
 
       grid: {
-        left: 83,
-        right: 24,
-        top: 48,
-        bottom: 40,
+        left: 90,
+        right: 30,
+        top: 55,
+        bottom: 32,
         containLabel: false,
       },
 
@@ -174,11 +174,12 @@ const HempMap = () => {
       xAxis: {
         name: 'HEMP Score',
         nameLocation: 'end',
-        nameGap: 6,
+        nameGap: 4,
         nameTextStyle: {
           ...axisTextStyle,
           align: 'right',
           verticalAlign: 'top',
+          padding: [8, 0, 0, 0],
         },
         type: 'value',
         scale: true,
