@@ -113,8 +113,13 @@ function App() {
           </div>
 
           <div
-            className="w-full relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ backgroundColor: COLORS.GRAYBG, marginBottom: "12px", height: "401px", padding: "20px 0" }}
+            className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
+            style={{ 
+              backgroundColor: COLORS.GRAYBG, 
+              marginBottom: "12px", 
+              height: "401px",
+              padding: "20px 0" 
+            }}
           >
             <SankeyChart />
           </div>
