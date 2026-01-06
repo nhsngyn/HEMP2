@@ -1003,7 +1003,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         </h2>
       </div>
       {/* Chart area */}
-      <div className="flex-1 min-h-0 relative" style={{ marginTop: '4px', paddingBottom: '30px', overflow: 'hidden' }}>
+      <div className="flex-1 min-h-0 relative" style={{ marginTop: '4px', padding: '20px 0', overflow: 'hidden' }}>
         <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
       </div>
 
