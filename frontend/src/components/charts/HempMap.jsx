@@ -174,11 +174,11 @@ const HempMap = () => {
       xAxis: {
         name: 'HEMP Score',
         nameLocation: 'end',
+        nameGap: 6,
         nameTextStyle: {
           ...axisTextStyle,
           align: 'right',
           verticalAlign: 'top',
-          padding: [12, 16, 0, 0],
         },
         type: 'value',
         scale: true,
