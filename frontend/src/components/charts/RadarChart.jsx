@@ -338,7 +338,7 @@ const RadarChart = () => {
 
 
   return (
-    <div className="w-full h-full relative" style={{ padding: '20px 0' }}>
+    <div className="w-full h-full relative">
       {/* Title with icon - absolute positioned */}
       <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4">
 

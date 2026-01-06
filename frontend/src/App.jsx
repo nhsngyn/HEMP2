@@ -97,26 +97,24 @@ function App() {
             className="flex w-full"
             style={{ gap: "12px", height: "294px" }}
           >
-            <div
-              className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
-              style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 16px" }}
-            >
-              <div className="w-full h-full">
-                <HempMap />
-              </div>
-            </div>
+          <div
+            className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
+            style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+          >
+            <HempMap />
+          </div>
 
-            <div
-              className="h-full w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
-              style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
-            >
-              <RadarChart />
-            </div>
+          <div
+            className="h-full w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
+            style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+          >
+            <RadarChart />
+          </div>
           </div>
 
           <div
             className="w-full flex-1 relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ backgroundColor: COLORS.GRAYBG, marginBottom: "12px", minHeight: "480px" }}
+            style={{ backgroundColor: COLORS.GRAYBG, marginBottom: "12px", minHeight: "480px", padding: "20px 0" }}
           >
             <SankeyChart />
           </div>
