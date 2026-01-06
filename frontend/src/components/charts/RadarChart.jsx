@@ -373,8 +373,8 @@ const RadarChart = () => {
             padding: 'clamp(8px, 0.6vw, 12px)'
           }}
         >
-            {/* 레이더 차트 - 데스크톱: 65%, 모바일: 고정 350px 높이 */}
-            <div ref={radarContainerRef} className="w-full md:w-[65%] md:h-full" style={{ height: '350px' }}>
+            {/* 레이더 차트 - 모바일/데스크톱 모두 350px 높이 */}
+            <div ref={radarContainerRef} className="w-full md:w-[65%] shrink-0" style={{ height: '350px' }}>
               <svg ref={svgRef} className="w-full h-full mt-4" />
             </div>
 
@@ -384,15 +384,13 @@ const RadarChart = () => {
 
         {/* 점수 정보 - 데스크톱: 우측 35%, 모바일: 하단 auto */}
         <div
-          className="info_arena w-full md:w-[35%] md:h-full flex flex-col md:min-h-0 md:overflow-hidden"
+          className="info_arena w-full md:w-[35%] md:h-full flex flex-col shrink-0 md:min-h-0 md:overflow-hidden pb-4 md:pb-0"
           style={{
             gap: 'clamp(8px, 1vh, 12px)',
             paddingTop: 'clamp(4px, 0.5vh, 6px)',
-            paddingBottom: 'clamp(4px, 0.5vh, 6px)',
             paddingLeft: 'clamp(2px, 0.7vw, 2px)',
             paddingRight: 'clamp(4px, 0.7vw, 6px)',
-            boxSizing: 'border-box',
-            minHeight: 'auto'
+            boxSizing: 'border-box'
           }}
         >
           {/* Chain name badge 또는 Median 레이블 */}
