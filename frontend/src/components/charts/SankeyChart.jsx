@@ -5,6 +5,7 @@ import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
 import { sankeyMockPropositions, defaultDummyPropositions } from '../../data/sankeyMockData';
 import ChartTitle from '../common/ChartTitle';
+import SankeyChartSkeleton from '../skeletons/SankeyChartSkeleton';
 
 const TYPE_COLOR_PALETTE = [
   '#FF6B6B',
@@ -313,8 +314,9 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const propositionInfoRef = useRef(null);
-  const { allChains, selectedMainId, setSankeyFilter, clearSankeyFilter } = useChainStore();
+  const { allChains, selectedMainId, setSankeyFilter, clearSankeyFilter, isLoading } = useChainStore();
   const [selectedLink, setSelectedLink] = useState(null);
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   // Get main chain data
   const mainChain = useMemo(() => {
@@ -346,6 +348,18 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
     if (Array.isArray(mainChain.propositions) && mainChain.propositions.length > 0) return true;
     return !!(sankeyMockPropositions[mainChain.id] || defaultDummyPropositions);
   }, [mainChain]);
+
+  // Skeleton 전환 로직 (최소 300ms 대기)
+  useEffect(() => {
+    if (!isLoading && allChains.length > 0 && mainChain) {
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (isLoading || !mainChain) {
+      setShowSkeleton(true);
+    }
+  }, [isLoading, allChains.length, mainChain]);
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
@@ -984,9 +998,17 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   return (
     <div ref={containerRef} className="w-full h-full relative flex flex-col" style={{ overflow: 'visible' }}>
       <ChartTitle number={3} title="Proposal Configuration Flow" />
-      {/* Chart area */}
-      <div className="flex-1 min-h-0 relative" style={{ marginTop: '34px', overflow: 'hidden' }}>
-        <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+      
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '54px' }}>
+        {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
+      </div>
+
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px' }}>
+        {!showSkeleton && (
+          <div className="flex-1 min-h-0 relative" style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
+            <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+          </div>
+        )}
       </div>
 
     </div>
