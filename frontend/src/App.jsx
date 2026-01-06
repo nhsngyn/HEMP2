@@ -15,15 +15,24 @@ function App() {
     selectedSubId1,
     selectedSubId2,
     sankeyFilter,
+    fetchChains,
   } = useChainStore();
 
   const prevSankeyFilterRef = useRef(null);
   const prevMainIdRef = useRef(selectedMainId);
 
+  // 초기 데이터 로드 (한 번만)
+  useEffect(() => {
+    if (allChains.length === 0) {
+      fetchChains();
+    }
+  }, []); // 빈 배열: 마운트 시 한 번만 실행
+
   const mainChain = useMemo(
     () => allChains.find((c) => c.id === selectedMainId),
     [allChains, selectedMainId]
   );
+  
   useEffect(() => {
     prevMainIdRef.current = selectedMainId;
   }, [selectedMainId]);
@@ -86,28 +95,32 @@ function App() {
 
           <div
             className="flex w-full"
-            style={{ gap: "12px", height: "294px" }}
+            style={{ gap: "12px", height: "350px" }}
           >
-            <div
-              className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
-              style={{ backgroundColor: COLORS.GRAYBG }}
-            >
-              <div className="absolute inset-0">
-                <HempMap />
-              </div>
-            </div>
-
-            <div
-              className="h-full w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
-              style={{ backgroundColor: COLORS.GRAYBG }}
-            >
-              <RadarChart />
-            </div>
+          <div
+            className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
+            style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+          >
+            <HempMap />
           </div>
 
           <div
-            className="w-full flex-1 relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ backgroundColor: COLORS.GRAYBG, marginBottom: "12px", minHeight: "480px" }}
+            className="h-full w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
+            style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+          >
+            <RadarChart />
+          </div>
+          </div>
+
+          <div
+            className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
+            style={{ 
+              backgroundColor: COLORS.GRAYBG, 
+              marginBottom: "59px",
+              height: "calc(100vh - 51px - 88px - 350px - 12px - 59px)",
+              minHeight: "300px",
+              padding: "20px 0" 
+            }}
           >
             <SankeyChart />
           </div>

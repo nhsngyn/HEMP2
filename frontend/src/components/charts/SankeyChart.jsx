@@ -4,6 +4,8 @@ import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
 import { sankeyMockPropositions, defaultDummyPropositions } from '../../data/sankeyMockData';
+import ChartTitle from '../common/ChartTitle';
+import SankeyChartSkeleton from '../skeletons/SankeyChartSkeleton';
 
 const TYPE_COLOR_PALETTE = [
   '#FF6B6B',
@@ -312,8 +314,9 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const propositionInfoRef = useRef(null);
-  const { allChains, selectedMainId, setSankeyFilter, clearSankeyFilter } = useChainStore();
+  const { allChains, selectedMainId, setSankeyFilter, clearSankeyFilter, isLoading } = useChainStore();
   const [selectedLink, setSelectedLink] = useState(null);
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   // Get main chain data
   const mainChain = useMemo(() => {
@@ -345,6 +348,18 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
     if (Array.isArray(mainChain.propositions) && mainChain.propositions.length > 0) return true;
     return !!(sankeyMockPropositions[mainChain.id] || defaultDummyPropositions);
   }, [mainChain]);
+
+  // Skeleton 전환 로직 (최소 300ms 대기)
+  useEffect(() => {
+    if (!isLoading && allChains.length > 0) {
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (isLoading) {
+      setShowSkeleton(true);
+    }
+  }, [isLoading, allChains.length]);
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
@@ -438,7 +453,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         return;
       }
       // padding 값 조절 - 차트가 잘리지 않도록 여유 공간 확보 (라벨과 노드가 잘리지 않도록 충분한 여유)
-      const padding = { top: 80, right: 80, bottom: 30, left: 50 };
+      const padding = { top: 40, right: 80, bottom: 30, left: 50 };
       const chartWidth = containerWidth - padding.left - padding.right;
       const chartHeight = containerHeight - padding.top - padding.bottom;
 
@@ -981,30 +996,19 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   }, [width, height, mainChain, sankeyData, hasPropositionsData, selectedLink]);
 
   return (
-    <div ref={containerRef} className="w-full h-full absolute inset-0 flex flex-col" style={{ overflow: 'visible' }}>
-      {/* Title with icon - absolute positioned */}
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4 py-3">
-        <div
-          className="flex items-center justify-center rounded-full text-caption1-sb"
-          style={{
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#ffffff15',
-            color: '#D1D5DB'
-          }}
-        >
-          3
-        </div>
-        <h2
-          className="text-body3-b"
-          style={{ color: '#D1D5DB' }}
-        >
-          Proposal Configuration Flow
-        </h2>
+    <div ref={containerRef} className="w-full h-full relative flex flex-col" style={{ overflow: 'visible' }}>
+      <ChartTitle number={3} title="Proposal Configuration Flow" />
+      
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '54px' }}>
+        {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
       </div>
-      {/* Chart area */}
-      <div className="flex-1 min-h-0 relative" style={{ marginTop: '4px', paddingBottom: '30px', overflow: 'hidden' }}>
-        <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
+        {!showSkeleton && (
+          <div className="flex-1 min-h-0 relative" style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
+            <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+          </div>
+        )}
       </div>
 
     </div>

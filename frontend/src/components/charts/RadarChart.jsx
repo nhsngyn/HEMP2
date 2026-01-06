@@ -1,7 +1,9 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import * as d3 from 'd3';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
+import ChartTitle from '../common/ChartTitle';
+import RadarChartSkeleton from '../skeletons/RadarChartSkeleton';
 
 const METRICS = [
   { key: 'vib', label: 'VIB (Validator Influence Balance)', maxValue: 26 },
@@ -26,7 +28,9 @@ const CHAIN_CONFIGS = [
 const RadarChart = () => {
   const svgRef = useRef(null);
   const radarContainerRef = useRef(null);
-  const { allChains, selectedMainId, selectedSubId1, selectedSubId2 } = useChainStore();
+  const { allChains, selectedMainId, selectedSubId1, selectedSubId2, isLoading } = useChainStore();
+  
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   // 체인 데이터 배열로 통합
   const chains = useMemo(() => {
@@ -93,6 +97,18 @@ const RadarChart = () => {
       ...medianValues
     };
   }, [medianValues]);
+
+  // Skeleton 전환 로직 (최소 300ms 대기)
+  useEffect(() => {
+    if (!isLoading && allChains.length > 0) {
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (isLoading) {
+      setShowSkeleton(true);
+    }
+  }, [isLoading, allChains.length]);
 
   // 레이더 차트 그리기
   useEffect(() => {
@@ -339,39 +355,25 @@ const RadarChart = () => {
 
   return (
     <div className="w-full h-full relative">
-      {/* Title with icon - absolute positioned */}
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4 py-3">
-
-        <div
-          className="flex items-center justify-center rounded-full text-caption1-sb"
-          style={{
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#ffffff15',
-            color: '#D1D5DB'
-          }}
-        >
-          2
-        </div>
-        <h2
-          className="text-body3-b"
-          style={{ color: '#D1D5DB' }}
-        >
-          HEMP Comparison Radar Chart
-        </h2>
+      <ChartTitle number={2} title="HEMP Comparison Radar Chart" />
+      
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '30px' }}>
+        {showSkeleton && <RadarChartSkeleton showShimmer={true} />}
       </div>
-      {/* Chart area - original layout maintained */}
-      <div
-        className="radar_arena w-full h-full flex my-1 min-h-0"
-        style={{
-          gap: 'clamp(16px, 1.5vw, 24px)',
-          padding: 'clamp(8px, 0.6vw, 12px)'
-        }}
-      >
-        {/* 왼쪽: 레이더 차트 (60%) */}
-        <div ref={radarContainerRef} className="h-full" style={{ width: '65%' }}>
-          <svg ref={svgRef} className="w-full h-full mt-4" />
-        </div>
+
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
+        {!showSkeleton && (
+          <div
+            className="radar_arena w-full h-full flex my-1 min-h-0"
+            style={{
+              gap: 'clamp(16px, 1.5vw, 24px)',
+              padding: 'clamp(8px, 0.6vw, 12px)'
+            }}
+          >
+            {/* 왼쪽: 레이더 차트 (60%) */}
+            <div ref={radarContainerRef} className="h-full" style={{ width: '65%' }}>
+              <svg ref={svgRef} className="w-full h-full mt-4" />
+            </div>
 
         {/* Divider */}
         <div className="border-r border-gray-700 my-auto" style={{ height: '99%' }}></div>
@@ -568,6 +570,8 @@ const RadarChart = () => {
             })}
           </div>
         </div>
+          </div>
+        )}
       </div>
     </div >
   );

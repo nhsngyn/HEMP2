@@ -1,21 +1,37 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import useChainStore from '../../store/useChainStore';
 import useChainSelection from '../../hooks/useChainSelection';
 import { BUBBLE_CHART } from '../../constants/chart';
 import { COLORS } from '../../constants/colors';
+import HempMapSkeleton from '../skeletons/HempMapSkeleton';
+import ChartTitle from '../common/ChartTitle';
 
 const HempMap = () => {
   const chartRef = useRef(null);
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   const {
     allChains,
     selectedMainId,
     selectedSubId1,
     selectedSubId2,
+    isLoading,
   } = useChainStore();
 
   const { selectChain, getSelectionInfo } = useChainSelection();
+
+  // Skeleton 전환 로직 (최소 300ms 대기)
+  useEffect(() => {
+    if (!isLoading && allChains.length > 0) {
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (isLoading || allChains.length === 0) {
+      setShowSkeleton(true);
+    }
+  }, [isLoading, allChains.length]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -99,10 +115,10 @@ const HempMap = () => {
       textStyle: { fontFamily: 'SUIT' },
 
       grid: {
-        left: 83,
-        right: 24,
-        top: 48,
-        bottom: 28,
+        left: 90,
+        right: 30,
+        top: 55,
+        bottom: 32,
         containLabel: false,
       },
 
@@ -159,11 +175,12 @@ const HempMap = () => {
       xAxis: {
         name: 'HEMP Score',
         nameLocation: 'end',
+        nameGap: 4,
         nameTextStyle: {
           ...axisTextStyle,
           align: 'right',
           verticalAlign: 'top',
-          padding: [12, 16, 0, 0],
+          padding: [8, 0, 0, 0],
         },
         type: 'value',
         scale: true,
@@ -292,26 +309,8 @@ const HempMap = () => {
   }
 
   return (
-    <div className="w-full h-full relative p-[12px]">
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4 py-3">
-        <div
-          className="flex items-center justify-center rounded-full text-caption1-sb"
-          style={{
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#ffffff15',
-            color: '#D1D5DB'
-          }}
-        >
-          1
-        </div>
-        <h2
-          className="text-body3-b"
-          style={{ color: '#D1D5DB' }}
-        >
-          HEMP Map
-        </h2>
-      </div>
+    <div className="w-full h-full relative">
+      <ChartTitle number={1} title="HEMP Map" />
 
       {/* 인포메이션 툴팁 영역 (기존 유지) */}
       <div className="absolute top-5 right-5 z-50 group">
@@ -331,7 +330,9 @@ const HempMap = () => {
         <div
           className="
             absolute
-            right-5
+            top-full
+            right-0
+            mt-2
             w-max
             max-w-[370px]
             p-2
@@ -355,17 +356,25 @@ const HempMap = () => {
         </div>
       </div>
 
-      <ReactECharts
-        ref={chartRef}
-        option={option}
-        style={{ width: '100%', height: '100%' }}
-        opts={{ renderer: 'canvas' }}
-        onEvents={{
-          click: onChartClick,
-          mouseover: handleChartMouseOver,
-          mouseout: handleChartMouseOut,
-        }}
-      />
+      {showSkeleton ? (
+        <div className="absolute inset-0 transition-opacity duration-300">
+          <HempMapSkeleton showShimmer={true} />
+        </div>
+      ) : (
+        <div className="absolute inset-0 transition-opacity duration-300">
+          <ReactECharts
+            ref={chartRef}
+            option={option}
+            style={{ width: '100%', height: '100%' }}
+            opts={{ renderer: 'canvas' }}
+            onEvents={{
+              click: onChartClick,
+              mouseover: handleChartMouseOver,
+              mouseout: handleChartMouseOut,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
