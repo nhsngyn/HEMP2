@@ -5,11 +5,6 @@ import { getChains, getPropositions } from '../utils/dataLoader';
  * Get all chains with optional filtering
  */
 export const getAllChains = async (filters?: ChainFilters): Promise<Chain[]> => {
-  // 🎯 개발 환경에서 Skeleton UI 테스트를 위한 지연 (2초)
-  if (process.env.NODE_ENV === 'development') {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
-  
   let chains = getChains();
   
   // Apply filters
