@@ -99,7 +99,7 @@ function App() {
           >
             <div
               className="h-full w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
-              style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 0" }}
+              style={{ backgroundColor: COLORS.GRAYBG, padding: "20px 16px" }}
             >
               <div className="w-full h-full">
                 <HempMap />
