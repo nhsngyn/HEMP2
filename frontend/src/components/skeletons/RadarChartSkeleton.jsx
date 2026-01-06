@@ -39,7 +39,7 @@ const RadarChartSkeleton = ({ showShimmer = true }) => {
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/30 to-gray-800/20" />
 
       {/* SVG 레이더 차트 */}
-      <svg viewBox="0 0 100 100" className="w-full h-full">
+      <svg viewBox="0 0 100 100" className="w-3/4 h-3/4">
         {/* 격자 (동심 5각형) */}
         {gridLevels.map((radius, index) => (
           <polygon

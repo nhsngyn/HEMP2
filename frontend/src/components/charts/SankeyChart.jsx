@@ -351,15 +351,15 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
   // Skeleton 전환 로직 (최소 300ms 대기)
   useEffect(() => {
-    if (!isLoading && allChains.length > 0 && mainChain) {
+    if (!isLoading && allChains.length > 0) {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
       }, 300);
       return () => clearTimeout(timer);
-    } else if (isLoading || !mainChain) {
+    } else if (isLoading) {
       setShowSkeleton(true);
     }
-  }, [isLoading, allChains.length, mainChain]);
+  }, [isLoading, allChains.length]);
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
