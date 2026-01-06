@@ -1005,16 +1005,18 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
     <div ref={containerRef} className="w-full h-full relative flex flex-col" style={{ overflow: 'visible' }}>
       <ChartTitle number={3} title="Proposal Configuration Flow" />
       
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '54px' }}>
-        {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
-      </div>
+      {/* Skeleton 오버레이 (로딩 중에만 표시) */}
+      {showSkeleton && (
+        <div className="absolute inset-0 z-10 transition-opacity duration-300" style={{ top: '54px' }}>
+          <SankeyChartSkeleton showShimmer={true} />
+        </div>
+      )}
 
+      {/* 실제 차트 (항상 렌더링) */}
       <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
-        {!showSkeleton && (
-          <div className="flex-1 min-h-0 relative" style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-            <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
-          </div>
-        )}
+        <div className="flex-1 min-h-0 relative" style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+          <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+        </div>
       </div>
 
     </div>

@@ -357,19 +357,22 @@ const RadarChart = () => {
     <div className="w-full h-full relative">
       <ChartTitle number={2} title="HEMP Comparison Radar Chart" />
       
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '30px' }}>
-        {showSkeleton && <RadarChartSkeleton showShimmer={true} />}
-      </div>
+      {/* Skeleton 오버레이 (로딩 중에만 표시) */}
+      {showSkeleton && (
+        <div className="absolute inset-0 z-10 transition-opacity duration-300" style={{ top: '30px' }}>
+          <RadarChartSkeleton showShimmer={true} />
+        </div>
+      )}
 
+      {/* 실제 차트 (항상 렌더링) */}
       <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
-        {!showSkeleton && (
-          <div
-            className="radar_arena w-full h-full flex flex-col md:flex-row my-1 min-h-0"
-            style={{
-              gap: 'clamp(16px, 1.5vw, 24px)',
-              padding: 'clamp(8px, 0.6vw, 12px)'
-            }}
-          >
+        <div
+          className="radar_arena w-full h-full flex flex-col md:flex-row my-1 min-h-0"
+          style={{
+            gap: 'clamp(16px, 1.5vw, 24px)',
+            padding: 'clamp(8px, 0.6vw, 12px)'
+          }}
+        >
             {/* 레이더 차트 - 데스크톱: 65%, 모바일: 상단 60% */}
             <div ref={radarContainerRef} className="w-full md:w-[65%] h-[60%] md:h-full">
               <svg ref={svgRef} className="w-full h-full mt-4" />
@@ -570,8 +573,7 @@ const RadarChart = () => {
             })}
           </div>
         </div>
-          </div>
-        )}
+        </div>
       </div>
     </div >
   );
