@@ -116,8 +116,9 @@ function App() {
             className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
-              marginBottom: "12px", 
-              height: "401px",
+              marginBottom: "59px",
+              height: "calc(100vh - 51px - 88px - 294px - 12px - 59px)",
+              minHeight: "300px",
               padding: "20px 0" 
             }}
           >
