@@ -370,12 +370,12 @@ const HempMap = () => {
         </div>
       </div>
 
-      <div className="transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0 }}>
-        {showSkeleton && <HempMapSkeleton showShimmer={true} />}
-      </div>
-      
-      <div className="transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1 }}>
-        {!showSkeleton && (
+      {showSkeleton ? (
+        <div className="absolute inset-0 transition-opacity duration-300">
+          <HempMapSkeleton showShimmer={true} />
+        </div>
+      ) : (
+        <div className="absolute inset-0 transition-opacity duration-300">
           <ReactECharts
             ref={chartRef}
             option={option}
@@ -387,8 +387,8 @@ const HempMap = () => {
               mouseout: handleChartMouseOut,
             }}
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
