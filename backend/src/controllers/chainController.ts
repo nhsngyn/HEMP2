@@ -1,15 +1,25 @@
 import { Request, Response } from 'express';
 import * as chainService from '../services/chainService';
+import { ChainFilters, PropositionFilters } from '../models/types';
 
 /**
  * Get all chains
+ * Query params: minScore, maxScore, search
  */
 export const getAllChains = async (req: Request, res: Response): Promise<void> => {
   try {
-    const chains = await chainService.getAllChains();
+    const filters: ChainFilters = {
+      minScore: req.query.minScore ? Number(req.query.minScore) : undefined,
+      maxScore: req.query.maxScore ? Number(req.query.maxScore) : undefined,
+      search: req.query.search as string | undefined
+    };
+    
+    const chains = await chainService.getAllChains(filters);
+    
     res.json({
       success: true,
-      data: chains
+      data: chains,
+      count: chains.length
     });
   } catch (error) {
     res.status(500).json({
@@ -51,15 +61,26 @@ export const getChainById = async (req: Request, res: Response): Promise<void> =
 
 /**
  * Get propositions for a specific chain
+ * Query params: type, result, participationLevel, voteComposition, processingSpeed
  */
 export const getChainPropositions = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const propositions = await chainService.getChainPropositions(id);
+    
+    const filters: PropositionFilters = {
+      type: req.query.type as string | undefined,
+      result: req.query.result as string | undefined,
+      participationLevel: req.query.participationLevel as string | undefined,
+      voteComposition: req.query.voteComposition as string | undefined,
+      processingSpeed: req.query.processingSpeed as string | undefined
+    };
+    
+    const propositions = await chainService.getChainPropositions(id, filters);
     
     res.json({
       success: true,
-      data: propositions
+      data: propositions,
+      count: propositions.length
     });
   } catch (error) {
     res.status(500).json({
@@ -70,3 +91,22 @@ export const getChainPropositions = async (req: Request, res: Response): Promise
   }
 };
 
+/**
+ * Get chain statistics
+ */
+export const getChainStatistics = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const stats = await chainService.getChainStatistics();
+    
+    res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch statistics',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};

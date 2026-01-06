@@ -1,42 +1,56 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import chainRoutes from './routes/chainRoutes';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: CORS_ORIGIN,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Routes
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', message: 'HEMP 2.0 API Server is running' });
-});
-
-app.use('/api/chains', chainRoutes);
-
-// Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Internal Server Error',
-    message: err.message 
+// Health check route
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'HEMP 2.0 API Server is running',
+    timestamp: new Date().toISOString()
   });
 });
 
+// API Routes
+app.use('/api/chains', chainRoutes);
+
+// 404 handler (must be after all routes)
+app.use(notFoundHandler);
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
+
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 HEMP 2.0 Backend server is running on port ${PORT}`);
+  console.log(`
+╔═══════════════════════════════════════════╗
+║   🚀 HEMP 2.0 Backend Server Started    ║
+╠═══════════════════════════════════════════╣
+║   Port:        ${PORT}                       ║
+║   Environment: ${process.env.NODE_ENV || 'development'}         ║
+║   CORS Origin: ${CORS_ORIGIN}  ║
+╚═══════════════════════════════════════════╝
+  `);
 });
 
 export default app;
-
