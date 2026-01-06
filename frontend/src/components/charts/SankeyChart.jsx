@@ -370,11 +370,11 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       // Clear previous render
       d3.select(svgRef.current).selectAll('*').remove();
 
-      // 고정 너비로 설정하여 가로 스크롤 가능하도록
-      const containerWidth = 1800; // 고정 너비
+      // 컨테이너 너비에 맞춤 (반응형)
+      const containerWidth = containerRef.current.clientWidth || width;
       const containerHeight = containerRef.current.clientHeight || height;
 
-      if (containerHeight === 0) {
+      if (containerWidth === 0 || containerHeight === 0) {
         setTimeout(drawChart, 100);
         return;
       }
@@ -1009,23 +1009,10 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
       </div>
 
-      <div className="absolute inset-0 transition-opacity duration-300 flex flex-col" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
         {!showSkeleton && (
-          <div className="flex-1 min-h-0 relative overflow-x-auto overflow-y-hidden" 
-            style={{ 
-              width: '100%', 
-              height: '100%',
-              transform: 'rotateX(180deg)' // 스크롤바를 상단으로
-            }}
-          >
-            <div style={{ 
-              minWidth: '1800px', // 더 넓게
-              width: '1800px',
-              height: '100%',
-              transform: 'rotateX(180deg)' // 콘텐츠는 원래대로
-            }}>
-              <svg ref={svgRef} style={{ width: '100%', height: '100%', overflow: 'visible' }} />
-            </div>
+          <div className="flex-1 min-h-0 relative" style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+            <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
           </div>
         )}
       </div>

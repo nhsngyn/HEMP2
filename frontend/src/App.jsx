@@ -103,7 +103,7 @@ function App() {
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               padding: "20px 0",
-              height: "clamp(300px, 50vh, 350px)" // 모바일: 반응형, 데스크톱: 350px
+              height: "350px" // 고정 350px
             }}
           >
             <HempMap />
@@ -114,7 +114,7 @@ function App() {
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               padding: "20px 0",
-              height: "clamp(550px, 80vh, 350px)" // 모바일: 550px, 데스크톱: 350px (원래대로)
+              height: "350px" // 버블 차트와 동일한 350px
             }}
           >
             <RadarChart />
