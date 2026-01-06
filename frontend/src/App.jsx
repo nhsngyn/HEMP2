@@ -15,21 +15,18 @@ function App() {
     selectedSubId1,
     selectedSubId2,
     sankeyFilter,
-    isLoading,
-    error,
-    isInitialized,
     fetchChains,
   } = useChainStore();
 
   const prevSankeyFilterRef = useRef(null);
   const prevMainIdRef = useRef(selectedMainId);
 
-  // 초기 데이터 로드
+  // 초기 데이터 로드 (한 번만)
   useEffect(() => {
-    if (!isInitialized) {
+    if (allChains.length === 0) {
       fetchChains();
     }
-  }, [isInitialized, fetchChains]);
+  }, []); // 빈 배열: 마운트 시 한 번만 실행
 
   const mainChain = useMemo(
     () => allChains.find((c) => c.id === selectedMainId),
@@ -67,37 +64,6 @@ function App() {
       scrollContainer.scrollTo({ top: proposalsSection.offsetTop - 20, behavior: "smooth" });
     }, 100);
   }, [sankeyFilter]);
-
-  // 로딩 상태
-  if (isLoading && !isInitialized) {
-    return (
-      <div className="w-screen h-screen flex items-center justify-center" style={{ backgroundColor: '#101010' }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-400 mx-auto mb-4"></div>
-          <p className="text-gray-400 text-body2-m">Loading HEMP Data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // 에러 상태
-  if (error && !isInitialized) {
-    return (
-      <div className="w-screen h-screen flex items-center justify-center" style={{ backgroundColor: '#101010' }}>
-        <div className="text-center max-w-md">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-title3-sb text-gray-100 mb-2">Failed to Load Data</h2>
-          <p className="text-body2-m text-gray-400 mb-6">{error}</p>
-          <button
-            onClick={() => fetchChains()}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-body2-sb"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <MainLayout leftSidebar={<Sidebar />}>

@@ -4,6 +4,7 @@ import useChainStore from '../../store/useChainStore';
 import useChainSelection from '../../hooks/useChainSelection';
 import { BUBBLE_CHART } from '../../constants/chart';
 import { COLORS } from '../../constants/colors';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const HempMap = () => {
   const chartRef = useRef(null);
@@ -13,6 +14,7 @@ const HempMap = () => {
     selectedMainId,
     selectedSubId1,
     selectedSubId2,
+    isLoading,
   } = useChainStore();
 
   const { selectChain, getSelectionInfo } = useChainSelection();
@@ -355,17 +357,21 @@ const HempMap = () => {
         </div>
       </div>
 
-      <ReactECharts
-        ref={chartRef}
-        option={option}
-        style={{ width: '100%', height: '100%' }}
-        opts={{ renderer: 'canvas' }}
-        onEvents={{
-          click: onChartClick,
-          mouseover: handleChartMouseOver,
-          mouseout: handleChartMouseOut,
-        }}
-      />
+      {isLoading && allChains.length === 0 ? (
+        <LoadingSpinner message="Loading chains..." size="sm" />
+      ) : (
+        <ReactECharts
+          ref={chartRef}
+          option={option}
+          style={{ width: '100%', height: '100%' }}
+          opts={{ renderer: 'canvas' }}
+          onEvents={{
+            click: onChartClick,
+            mouseover: handleChartMouseOver,
+            mouseout: handleChartMouseOut,
+          }}
+        />
+      )}
     </div>
   );
 };

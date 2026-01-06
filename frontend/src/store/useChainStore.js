@@ -20,19 +20,20 @@ const useChainStore = create((set, get) => ({
   // 로딩 및 에러 상태
   isLoading: false,
   error: null,
-  isInitialized: false,
   
   /**
    * API로부터 체인 데이터 로드
    */
   fetchChains: async (filters = {}) => {
+    // 이미 로딩 중이면 중복 호출 방지
+    if (get().isLoading) return;
+    
     set({ isLoading: true, error: null });
     try {
       const chains = await getAllChains(filters);
       set({ 
         allChains: chains, 
         isLoading: false,
-        isInitialized: true,
         error: null 
       });
       return chains;
