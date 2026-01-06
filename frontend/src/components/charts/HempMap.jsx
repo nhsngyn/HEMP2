@@ -347,9 +347,9 @@ const HempMap = () => {
         <div
           className="
             absolute
-            bottom-full
+            top-full
             right-0
-            mb-2
+            mt-2
             w-max
             max-w-[370px]
             p-2
