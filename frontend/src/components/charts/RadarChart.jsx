@@ -2,6 +2,7 @@ import { useEffect, useRef, useMemo } from 'react';
 import * as d3 from 'd3';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
+import ChartTitle from '../common/ChartTitle';
 
 const METRICS = [
   { key: 'vib', label: 'VIB (Validator Influence Balance)', maxValue: 26 },
@@ -339,27 +340,7 @@ const RadarChart = () => {
 
   return (
     <div className="w-full h-full relative">
-      {/* Title with icon - absolute positioned */}
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4">
-
-        <div
-          className="flex items-center justify-center rounded-full text-caption1-sb"
-          style={{
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#ffffff15',
-            color: '#D1D5DB'
-          }}
-        >
-          2
-        </div>
-        <h2
-          className="text-body3-b"
-          style={{ color: '#D1D5DB' }}
-        >
-          HEMP Comparison Radar Chart
-        </h2>
-      </div>
+      <ChartTitle number={2} title="HEMP Comparison Radar Chart" />
       {/* Chart area - original layout maintained */}
       <div
         className="radar_arena w-full h-full flex my-1 min-h-0"

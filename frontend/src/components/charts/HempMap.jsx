@@ -5,6 +5,7 @@ import useChainSelection from '../../hooks/useChainSelection';
 import { BUBBLE_CHART } from '../../constants/chart';
 import { COLORS } from '../../constants/colors';
 import HempMapSkeleton from '../skeletons/HempMapSkeleton';
+import ChartTitle from '../common/ChartTitle';
 
 const HempMap = () => {
   const chartRef = useRef(null);
@@ -309,25 +310,7 @@ const HempMap = () => {
 
   return (
     <div className="w-full h-full relative">
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4">
-        <div
-          className="flex items-center justify-center rounded-full text-caption1-sb"
-          style={{
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#ffffff15',
-            color: '#D1D5DB'
-          }}
-        >
-          1
-        </div>
-        <h2
-          className="text-body3-b"
-          style={{ color: '#D1D5DB' }}
-        >
-          HEMP Map
-        </h2>
-      </div>
+      <ChartTitle number={1} title="HEMP Map" />
 
       {/* 인포메이션 툴팁 영역 (기존 유지) */}
       <div className="absolute top-5 right-5 z-50 group">
