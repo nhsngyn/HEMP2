@@ -438,7 +438,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         return;
       }
       // padding 값 조절 - 차트가 잘리지 않도록 여유 공간 확보 (라벨과 노드가 잘리지 않도록 충분한 여유)
-      const padding = { top: 80, right: 80, bottom: 30, left: 50 };
+      const padding = { top: 40, right: 80, bottom: 30, left: 50 };
       const chartWidth = containerWidth - padding.left - padding.right;
       const chartHeight = containerHeight - padding.top - padding.bottom;
 
@@ -1003,7 +1003,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         </h2>
       </div>
       {/* Chart area */}
-      <div className="flex-1 min-h-0 relative" style={{ marginTop: '58px', overflow: 'hidden' }}>
+      <div className="flex-1 min-h-0 relative" style={{ marginTop: '34px', overflow: 'hidden' }}>
         <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
       </div>
 
