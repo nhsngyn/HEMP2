@@ -308,8 +308,8 @@ const HempMap = () => {
   }
 
   return (
-    <div className="w-full h-full relative p-[12px]">
-      <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4 py-3">
+    <div className="w-full h-full relative" style={{ padding: '20px 0' }}>
+      <div className="absolute top-5 left-0 z-10 flex items-center gap-3 px-4">
         <div
           className="flex items-center justify-center rounded-full text-caption1-sb"
           style={{
