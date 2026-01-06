@@ -1003,7 +1003,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
       </div>
 
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px' }}>
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
         {!showSkeleton && (
           <div className="flex-1 min-h-0 relative" style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
             <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
