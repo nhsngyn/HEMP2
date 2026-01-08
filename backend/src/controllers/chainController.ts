@@ -94,7 +94,7 @@ export const getChainPropositions = async (req: Request, res: Response): Promise
 /**
  * Get chain statistics
  */
-export const getChainStatistics = async (req: Request, res: Response): Promise<void> => {
+export const getChainStatistics = async (_req: Request, res: Response): Promise<void> => {
   try {
     const stats = await chainService.getChainStatistics();
     
