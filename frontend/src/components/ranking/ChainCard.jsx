@@ -19,7 +19,7 @@ const ChainCard = ({ chain, selectionInfo, isDragging, isOverlay }) => {
         boxSizing: 'border-box',
       }}
     >
-      <div className="w-[80px] flex-shrink-0 truncate text-body2-m text-gray-200">
+      <div className="w-[80px] flex-shrink-0 truncate text-gray-200" style={{ fontSize: '16px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '500' }}>
         {chain.name}
       </div>
 

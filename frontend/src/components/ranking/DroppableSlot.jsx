@@ -82,7 +82,7 @@ const DroppableSlot = ({ id, color, selectedChainId, onClear, placeholderText })
                         objectFit: 'cover'
                       }}
                   />
-                  <span className="text-body2-sb">
+                  <span style={{ fontSize: '16px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '600' }}>
                       {chainName}
                   </span>
               </div>
@@ -112,7 +112,7 @@ const DroppableSlot = ({ id, color, selectedChainId, onClear, placeholderText })
                 className="rounded-full bg-gray-600 flex-shrink-0"
                 style={{ width: LOGO_SIZE, height: LOGO_SIZE }}
               ></div>
-              <span className="text-gray-400 text-body2-sb">
+              <span className="text-gray-400" style={{ fontSize: '16px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '600' }}>
                 {placeholderText || "Select Chain"}
               </span>
           </div>

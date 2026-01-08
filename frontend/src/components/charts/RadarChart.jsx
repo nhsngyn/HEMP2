@@ -2,7 +2,6 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import * as d3 from 'd3';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
-import ChartTitle from '../common/ChartTitle';
 import RadarChartSkeleton from '../skeletons/RadarChartSkeleton';
 
 const METRICS = [
@@ -371,33 +370,23 @@ const RadarChart = () => {
 
 
   return (
-    <div className="w-full h-full relative">
-      <ChartTitle number={2} title="HEMP Comparison Radar Chart" />
-      
+    <div className="w-full h-full relative" style={{ overflowAnchor: 'none' }}>
       {/* Skeleton 오버레이 (로딩 중에만 표시) */}
       {showSkeleton && (
-        <div className="absolute inset-0 z-10 transition-opacity duration-300" style={{ top: '20px' }}>
+        <div className="absolute inset-0 z-10 transition-opacity duration-300">
           <RadarChartSkeleton showShimmer={true} />
         </div>
       )}
 
       {/* 실제 차트 (항상 렌더링) */}
       <div 
-        className="transition-opacity duration-300 md:absolute md:overflow-y-auto overflow-x-hidden md:overflow-hidden" 
+        className="transition-opacity duration-300 relative" 
         style={{ 
-          opacity: showSkeleton ? 0 : 1, 
-          top: '20px',
-          left: 0,
-          right: 0,
-          bottom: 0
+          opacity: showSkeleton ? 0 : 1
         }}
       >
         <div
-          className="radar_arena w-full flex flex-col md:flex-row h-full"
-          style={{
-            gap: '24px',
-            padding: '20px 24px'
-          }}
+          className="radar_arena w-full flex flex-col md:flex-row items-start gap-5 md:gap-6"
         >
             {/* 레이더 차트 - 모바일: 전체 너비, 데스크톱: 60% */}
             <div 
@@ -408,26 +397,31 @@ const RadarChart = () => {
               <svg ref={svgRef} className="w-full h-full" />
             </div>
 
-        {/* Divider - 모바일: 가로선, 데스크톱: 세로선 */}
+        {/* Divider - 모바일: 가로선 */}
         <div className="md:hidden border-t border-gray-700 w-full" style={{ margin: '0 -24px', width: 'calc(100% + 48px)' }}></div>
-        <div className="hidden md:block border-r border-gray-700" style={{ height: '100%' }}></div>
 
-        {/* 점수 정보 - 모바일: 전체 너비, 데스크톱: 40% */}
+        {/* 점수 정보 - 모바일: 전체 너비, 데스크톱: 40% + 왼쪽 테두리 + 상단 정렬 + 오른쪽/하단 패딩 */}
         <div
-          className="info_arena w-full md:w-[40%] flex flex-col"
+          className="info_arena w-full md:w-[40%] flex flex-col md:border-l border-gray-700 md:pl-6 md:pr-5 md:pb-5"
           style={{
-            gap: '20px',
-            paddingTop: '0px',
-            paddingBottom: '20px',
+            gap: '4px',
             boxSizing: 'border-box'
           }}
         >
           {/* Chain name badge */}
           <div className="flex justify-start">
             <div
-              className="rounded-md px-3 py-1"
               style={{
-                backgroundColor: '#282a2e'
+                backgroundColor: '#282a2e',
+                borderRadius: '3px',
+                paddingTop: '3px',
+                paddingRight: '6px',
+                paddingBottom: '3px',
+                paddingLeft: '6px',
+                gap: '3px',
+                display: 'inline-flex',
+                height: '22px',
+                alignItems: 'center'
               }}
             >
               <span
@@ -446,7 +440,7 @@ const RadarChart = () => {
           </div>
 
           {/* HEMP Score */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col" style={{ gap: '6px' }}>
             <p style={{ fontFamily: 'SUIT', fontWeight: 700, fontSize: '18px', lineHeight: '145%', letterSpacing: '-0.01em', color: '#E8EAED' }}>
               HEMP Score
             </p>
@@ -455,7 +449,7 @@ const RadarChart = () => {
                 style={{
                   fontFamily: 'SUIT',
                   fontWeight: 800,
-                  fontSize: 'clamp(32px, 6vw, 64px)',
+                  fontSize: '24px',
                   lineHeight: '110%',
                   letterSpacing: '0%',
                   textAlign: 'center',
@@ -471,7 +465,7 @@ const RadarChart = () => {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-gray-700"></div>
+          <div className="border-t border-gray-700" style={{ marginTop: '3.5px', marginBottom: '3.5px' }}></div>
 
           {/* Individual metric scores */}
           <div className="flex flex-col" style={{ gap: '6px' }}>

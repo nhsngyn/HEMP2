@@ -5,7 +5,6 @@ import useChainSelection from '../../hooks/useChainSelection';
 import { BUBBLE_CHART } from '../../constants/chart';
 import { COLORS } from '../../constants/colors';
 import HempMapSkeleton from '../skeletons/HempMapSkeleton';
-import ChartTitle from '../common/ChartTitle';
 
 const HempMap = () => {
   const chartRef = useRef(null);
@@ -310,8 +309,6 @@ const HempMap = () => {
 
   return (
     <div className="w-full h-full relative">
-      <ChartTitle number={1} title="HEMP Map" />
-
       {/* 인포메이션 툴팁 영역 (기존 유지) */}
       <div className="absolute top-5 right-5 z-50 group">
         <svg

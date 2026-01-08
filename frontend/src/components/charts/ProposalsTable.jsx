@@ -109,20 +109,20 @@ const ProposalsTable = ({ mainChain }) => {
     <div
       className="w-full h-full  rounded-lg shadow-lg flex flex-col"
       style={{
-        padding: 'calc(24px * var(--scale))'
+        padding: '24px'
       }}
     >
       <div
         className="flex items-center  justify-start gap-2 shrink-0 "
-        style={{ marginBottom: 'calc(16px * var(--scale))' }}
+        style={{ marginBottom: '16px' }}
       >
-        <h2 className="text-body3-b" style={{ color: '#D1D5DB' }}>
+        <h2 style={{ color: '#D1D5DB', fontSize: '14px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '700' }}>
           All Proposals
-        </h2> <span className="text-gray-500 text-body1-sb"> {filteredPropositions.length}</span>
+        </h2> <span className="text-gray-500" style={{ fontSize: '18px', lineHeight: '145%', letterSpacing: '-0.01em', fontWeight: '600' }}> {filteredPropositions.length}</span>
       </div>
 
       <div 
-        className="overflow-x-auto flex-1 min-h-0"
+        className="overflow-x-auto scrollbar-hide flex-1 min-h-0 relative"
         style={{ transform: 'rotateX(180deg)' }}
       >
         <div style={{ transform: 'rotateX(180deg)' }}>
@@ -130,51 +130,75 @@ const ProposalsTable = ({ mainChain }) => {
           <thead>
             <tr className="border-b border-gray-800 ">
               <th
-                className="text-left text-gray-400 text-caption1-sb"
+                className="text-left text-gray-400"
                 style={{
-                  padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                  padding: '12px 16px',
+                  fontSize: '13px',
+                  lineHeight: '130%',
+                  letterSpacing: '-0.02em',
+                  fontWeight: '600'
                 }}
               >
                 ID
               </th>
               <th
-                className="text-left text-gray-400 text-caption1-sb"
+                className="text-left text-gray-400"
                 style={{
-                  padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                  padding: '12px 16px',
+                  fontSize: '13px',
+                  lineHeight: '130%',
+                  letterSpacing: '-0.02em',
+                  fontWeight: '600'
                 }}
               >
                 Title
               </th>
               <th
-                className="text-left text-gray-400 text-caption1-sb"
+                className="text-left text-gray-400"
                 style={{
-                  padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`,
-                  width: '180px'
+                  padding: '12px 16px',
+                  width: '180px',
+                  fontSize: '13px',
+                  lineHeight: '130%',
+                  letterSpacing: '-0.02em',
+                  fontWeight: '600'
                 }}
               >
                 Type
               </th>
               <th
-                className="text-left text-gray-400 text-caption1-sb"
+                className="text-left text-gray-400"
                 style={{
-                  padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                  padding: '12px 16px',
+                  fontSize: '13px',
+                  lineHeight: '130%',
+                  letterSpacing: '-0.02em',
+                  fontWeight: '600'
                 }}
               >
                 Participation
               </th>
               <th
-                className="text-left text-gray-400 text-caption1-sb"
+                className="text-left text-gray-400"
                 style={{
-                  padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`,
-                  maxWidth: '140px'
+                  padding: '12px 16px',
+                  maxWidth: '140px',
+                  fontSize: '13px',
+                  lineHeight: '130%',
+                  letterSpacing: '-0.02em',
+                  fontWeight: '600'
                 }}
               >
                 Status
               </th>
               <th
-                className="text-left text-gray-400 text-caption1-sb"
+                className="text-left text-gray-400"
                 style={{
-                  padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                  padding: '12px 16px',
+                  fontSize: '13px',
+                  lineHeight: '130%',
+                  letterSpacing: '-0.02em',
+                  fontWeight: '600'
                 }}
               >
                 Processing Time
@@ -196,9 +220,13 @@ const ProposalsTable = ({ mainChain }) => {
 
                 {/* ID */}
                 <td
-                  className="text-gray-400 text-body3-m"
+                  className="text-gray-400"
                   style={{
-                    padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                    padding: '12px 16px',
+                    fontSize: '13px',
+                    lineHeight: '140%',
+                    letterSpacing: '-0.02em',
+                    fontWeight: '500'
                   }}
                 >
                   #{prop.id || (1000 + index)}
@@ -206,10 +234,14 @@ const ProposalsTable = ({ mainChain }) => {
 
                 {/* Title */}
                 <td
-                  className="max-w-md truncate text-body3-m"
+                  className="max-w-md truncate"
                   style={{
-                    padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`,
-                    color: '#E8EAED'
+                    padding: '12px 16px',
+                    color: '#E8EAED',
+                    fontSize: '13px',
+                    lineHeight: '140%',
+                    letterSpacing: '-0.02em',
+                    fontWeight: '500'
                   }}
                 >
                   {prop.title || 'Proposal Title'}
@@ -218,15 +250,15 @@ const ProposalsTable = ({ mainChain }) => {
                 <td
                   className="text-gray-200 font-bold"
                   style={{
-                    padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`,
-                    fontSize: 'calc(1rem * var(--scale))',
+                    padding: '12px 16px',
+                    fontSize: '13px',
                     fontFamily: 'SUIT',
                     width: '180px',
                     lineHeight: '22px'
                   }}
                 >
                   <span
-                    className="inline-flex items-center justify-center rounded-sm text-caption1-b transition-transform cursor-pointer"
+                    className="inline-flex items-center justify-center rounded-sm transition-transform cursor-pointer"
                     style={{
                       height: '22px',
                       padding: '3px 8px',
@@ -239,7 +271,11 @@ const ProposalsTable = ({ mainChain }) => {
                       color: '#D1D5DB',
                       transformOrigin: 'center',
                       margin: 0,
-                      whiteSpace: 'nowrap'
+                      whiteSpace: 'nowrap',
+                      fontSize: '12px',
+                      lineHeight: '130%',
+                      letterSpacing: '-0.02em',
+                      fontWeight: '700'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.1)';
@@ -262,9 +298,13 @@ const ProposalsTable = ({ mainChain }) => {
 
                 {/* Participation */}
                 <td
-                  className="text-gray-300 text-caption1-sb"
+                  className="text-gray-300"
                   style={{
-                    padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                    padding: '12px 16px',
+                    fontSize: '13px',
+                    lineHeight: '130%',
+                    letterSpacing: '-0.02em',
+                    fontWeight: '600'
                   }}
                 >
                   {prop.participation || '0.00%'}
@@ -272,10 +312,14 @@ const ProposalsTable = ({ mainChain }) => {
 
                 {/* Status */}
                 <td
-                  className={`text-caption1-eb ${getStatusColor(formatStatus(prop))}`}
+                  className={getStatusColor(formatStatus(prop))}
                   style={{
-                    padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`,
-                    maxWidth: '140px'
+                    padding: '12px 16px',
+                    maxWidth: '140px',
+                    fontSize: '13px',
+                    lineHeight: '130%',
+                    letterSpacing: '-0.02em',
+                    fontWeight: '800'
                   }}
                 >
                   {formatStatus(prop)}
@@ -283,9 +327,13 @@ const ProposalsTable = ({ mainChain }) => {
 
                 {/* Processing Time */}
                 <td
-                  className="text-gray-400 text-body3-sb"
+                  className="text-gray-400"
                   style={{
-                    padding: `calc(12px * var(--scale)) calc(16px * var(--scale))`
+                    padding: '12px 16px',
+                    fontSize: '13px',
+                    lineHeight: '140%',
+                    letterSpacing: '-0.02em',
+                    fontWeight: '600'
                   }}
                 >
                   {formatProcessingTime(prop)}
@@ -295,6 +343,18 @@ const ProposalsTable = ({ mainChain }) => {
           </tbody>
         </table>
         </div>
+
+        {/* Blur hint - 오른쪽에 더 많은 내용이 있음을 표시 */}
+        <div 
+          className="md:hidden absolute right-0 top-0 bottom-0 pointer-events-none"
+          style={{ 
+            width: '20px',
+            background: 'linear-gradient(to left, rgba(23, 23, 23, 0.95), transparent)',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
+            transform: 'rotateX(180deg)' // 부모와 같은 회전 적용
+          }}
+        />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import HempMap from "./components/charts/HempMap";
 import SankeyChart from "./components/charts/SankeyChart";
 import RadarChart from "./components/charts/RadarChart";
 import ProposalsTable from "./components/charts/ProposalsTable";
-import ChartTitle from "./components/common/ChartTitle";
+import ChartCard from "./components/common/ChartCard";
 import useChainStore from "./store/useChainStore";
 import useUrlSync from "./hooks/useUrlSync";
 import { COLORS } from "./constants/colors";
@@ -76,7 +76,7 @@ function App() {
         <section
           className="w-full flex flex-col"
           style={{
-            paddingTop: "clamp(60px, 8vw, 51px)", // 모바일: 60px (햄버거 버튼 공간), 데스크톱: 51px
+            paddingTop: "clamp(60px, 8vw, 25px)", // 모바일: 60px (햄버거 버튼 공간), 데스크톱: 25px
             paddingLeft: "clamp(12px, 3vw, 24px)",
             paddingRight: "clamp(12px, 3vw, 24px)",
             paddingBottom: "24px",
@@ -100,46 +100,23 @@ function App() {
 
           {/* 버블차트 + 레이더차트 - 데스크톱: 가로, 모바일: 세로 */}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 w-full"
+            className="grid grid-cols-1 md:grid-cols-2 w-full items-stretch"
             style={{ gap: "12px" }}
           >
-          <div
-            className="relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ 
-              backgroundColor: COLORS.GRAYBG, 
-              padding: "20px 0",
-              minHeight: "450px"
-            }}
-          >
-            <HempMap />
-          </div>
+            <ChartCard number={1} title="HEMP Map" height="auto">
+              <HempMap />
+            </ChartCard>
 
-          <div
-            className="relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ 
-              backgroundColor: COLORS.GRAYBG, 
-              paddingTop: "20px",
-              paddingBottom: "12px",
-              minHeight: "450px"
-            }}
-          >
-            <div className="md:h-full md:overflow-hidden">
+            <ChartCard number={2} title="HEMP Comparison Radar Chart" height="auto">
               <RadarChart />
-            </div>
-          </div>
+            </ChartCard>
           </div>
 
           {/* 생키차트 - 가로 스크롤 가능하므로 더 크게 */}
-          <div
-            className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
-            style={{ 
-              backgroundColor: COLORS.GRAYBG, 
-              marginBottom: "clamp(12px, 3vw, 59px)",
-              padding: "20px 0",
-              height: "clamp(500px, 80vh, 600px)" // 모바일/데스크톱 모두 더 크게
-            }}
-          >
-            <SankeyChart />
+          <div style={{ marginBottom: "clamp(12px, 3vw, 59px)" }}>
+            <ChartCard number={3} title="Proposal Configuration Flow" height="clamp(400px, 80vh, 600px)" noMaxHeight={true}>
+              <SankeyChart />
+            </ChartCard>
           </div>
         </section>
 

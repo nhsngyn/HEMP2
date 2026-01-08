@@ -4,7 +4,6 @@ import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
 import { sankeyMockPropositions, defaultDummyPropositions } from '../../data/sankeyMockData';
-import ChartTitle from '../common/ChartTitle';
 import SankeyChartSkeleton from '../skeletons/SankeyChartSkeleton';
 
 const TYPE_COLOR_PALETTE = [
@@ -314,6 +313,8 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const propositionInfoRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const topScrollRef = useRef(null);
   const { allChains, selectedMainId, setSankeyFilter, clearSankeyFilter, isLoading } = useChainStore();
   const [selectedLink, setSelectedLink] = useState(null);
   const [showSkeleton, setShowSkeleton] = useState(true);
@@ -402,14 +403,11 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         const errorGroup = svg.append('g')
           .attr('class', 'error-message')
           .attr('transform', `translate(${containerWidth / 2}, ${containerHeight / 2})`);
-
-        // 스케일 값 가져오기
-        const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
         
         errorGroup.append('text')
           .attr('text-anchor', 'middle')
           .attr('fill', '#ef4444')
-          .attr('font-size', `${20 * scale}px`)
+          .attr('font-size', '20px')
           .attr('font-weight', 'bold')
           .attr('font-family', 'SUIT')
           .attr('y', -20)
@@ -418,7 +416,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         errorGroup.append('text')
           .attr('text-anchor', 'middle')
           .attr('fill', '#fca5a5')
-          .attr('font-size', `${14 * scale}px`)
+          .attr('font-size', '14px')
           .attr('font-family', 'SUIT')
           .attr('y', 10)
           .text(`Reason: ${reason}`);
@@ -427,7 +425,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
           errorGroup.append('text')
             .attr('text-anchor', 'middle')
             .attr('fill', '#9ca3af')
-            .attr('font-size', `${12 * scale}px`)
+            .attr('font-size', '12px')
             .attr('font-family', 'SUIT')
             .attr('y', 30)
             .text(detail);
@@ -435,13 +433,12 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       };
 
       if (!mainChain) {
-        const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
         svg.append('text')
           .attr('x', containerWidth / 2)
           .attr('y', containerHeight / 2)
           .attr('text-anchor', 'middle')
           .attr('fill', '#9ca3af')
-          .attr('font-size', `${18 * scale}px`)
+          .attr('font-size', '18px')
           .attr('font-family', 'SUIT')
           .text('Select a MAIN CHAIN to view Sankey diagram');
         return;
@@ -462,7 +459,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         return;
       }
       // padding 값 조절 - 차트가 잘리지 않도록 여유 공간 확보 (라벨과 노드가 잘리지 않도록 충분한 여유)
-      const padding = { top: 40, right: 80, bottom: 30, left: 50 };
+      const padding = { top: 40, right: 20, bottom: 30, left: 20 };
       const chartWidth = svgWidth - padding.left - padding.right;
       const chartHeight = containerHeight - padding.top - padding.bottom;
 
@@ -826,7 +823,6 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       };
 
       // Add node labels (centered on node with 8px offset)
-      const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
       const maxColumn = Math.max(...nodes.map(n => n.column));
       node
         .append('text')
@@ -843,7 +839,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         .attr('y', (d) => (d.y0 + d.y1) / 2) // Vertical center
         .attr('dy', '0.35em')
         .attr('text-anchor', (d) => d.column === maxColumn ? 'end' : 'start')
-        .attr('font-size', `${12 * scale}px`)
+        .attr('font-size', '12px')
         .attr('font-weight', (d) => isNodeSelected(d) ? '700' : '500')
         .attr('fill', (d) => isNodeSelected(d) ? '#FFFFFF' : '#D1D5DB')
         .attr('pointer-events', 'none')
@@ -874,7 +870,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
             .attr('fill', '#6D7380')
-            .attr('font-size', `${12 * scale}px`)
+            .attr('font-size', '12px')
             .attr('font-weight', '700')
             .attr('font-family', 'SUIT')
             .attr('pointer-events', 'none');
@@ -886,7 +882,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
           textGroup.append('tspan')
             .attr('x', labelX)
-            .attr('dy', `${14 * scale}px`)
+            .attr('dy', '14px')
             .text('Speed');
         } else {
           svg.append('text')
@@ -894,7 +890,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
             .attr('fill', '#6D7380')
-            .attr('font-size', `${12 * scale}px`)
+            .attr('font-size', '12px')
             .attr('font-weight', '700')
             .attr('font-family', 'SUIT')
             .attr('pointer-events', 'none')
@@ -1007,8 +1003,6 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
   return (
     <div ref={containerRef} className="w-full h-full relative flex flex-col" style={{ overflow: 'visible' }}>
-      <ChartTitle number={3} title="Proposal Configuration Flow" />
-      
       {/* Skeleton 오버레이 (로딩 중에만 표시) */}
       {showSkeleton && (
         <div className="absolute inset-0 z-10 transition-opacity duration-300" style={{ top: '54px' }}>
@@ -1018,12 +1012,13 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
       {/* 실제 차트 (항상 렌더링) */}
       <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
-        {/* Scrollable container with gradient hint for mobile */}
+        {/* Scrollable container with blur hint */}
         <div className="relative w-full h-full">
           {/* Horizontal scroll container */}
           <div 
-            className="flex-1 min-h-0 relative overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-hidden" 
-            style={{ width: '100%', height: '100%' }}
+            ref={scrollContainerRef}
+            className="relative overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-hidden h-full" 
+            style={{ width: '100%' }}
           >
             {/* SVG wrapper with min-width for mobile */}
             <div style={{ minWidth: '1000px', width: '100%', height: '100%' }}>
@@ -1035,10 +1030,15 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
             </div>
           </div>
           
-          {/* Scroll hint gradient (mobile only) */}
+          {/* Blur hint - 오른쪽에 더 많은 내용이 있음을 표시 */}
           <div 
-            className="md:hidden absolute right-0 top-0 bottom-0 w-12 pointer-events-none bg-gradient-to-l from-gray-900 to-transparent"
-            style={{ opacity: 0.8 }}
+            className="md:hidden absolute right-0 top-0 bottom-0 pointer-events-none"
+            style={{ 
+              width: '20px',
+              background: 'linear-gradient(to left, rgba(23, 23, 23, 0.95), transparent)',
+              backdropFilter: 'blur(2px)',
+              WebkitBackdropFilter: 'blur(2px)'
+            }}
           />
         </div>
       </div>

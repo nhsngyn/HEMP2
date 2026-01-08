@@ -55,11 +55,13 @@ const MainLayout = ({ leftSidebar, children }) => {
       {/* 햄버거 메뉴 버튼 (모바일만) */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+        className="md:hidden fixed top-4 left-4 z-50 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+        style={{ width: '24px', height: '24px', padding: '4px' }}
         aria-label="Toggle menu"
       >
         <svg
-          className="w-6 h-6 text-gray-300"
+          className="text-gray-300"
+          style={{ width: '16px', height: '16px' }}
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"

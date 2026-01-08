@@ -8,21 +8,30 @@ import React from 'react';
  */
 const ChartTitle = ({ number, title }) => {
   return (
-    <div className="absolute top-0 left-0 z-10 flex items-center gap-3 px-4">
+    <div className="absolute z-10 flex items-center gap-3" style={{ top: '20px', left: '20px' }}>
       <div
-        className="flex items-center justify-center rounded-full text-caption1-sb"
+        className="flex items-center justify-center rounded-full"
         style={{
           width: '18px',
           height: '18px',
           backgroundColor: '#ffffff15',
-          color: '#D1D5DB'
+          color: '#D1D5DB',
+          fontSize: '12px',
+          lineHeight: '130%',
+          letterSpacing: '-0.02em',
+          fontWeight: '600'
         }}
       >
         {number}
       </div>
       <h2
-        className="text-body3-b"
-        style={{ color: '#D1D5DB' }}
+        style={{ 
+          color: '#D1D5DB',
+          fontSize: '14px',
+          lineHeight: '140%',
+          letterSpacing: '-0.02em',
+          fontWeight: '700'
+        }}
       >
         {title}
       </h2>
