@@ -379,8 +379,12 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         return;
       }
 
+      // 모바일에서는 최소 1000px 너비 보장 (가로 스크롤용)
+      const isMobile = window.innerWidth < 768;
+      const svgWidth = isMobile ? Math.max(containerWidth, 1000) : containerWidth;
+
       const svg = d3.select(svgRef.current);
-      svg.attr('width', containerWidth)
+      svg.attr('width', svgWidth)
         .attr('height', containerHeight)
         .style('overflow', 'visible');
 
@@ -459,7 +463,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       }
       // padding 값 조절 - 차트가 잘리지 않도록 여유 공간 확보 (라벨과 노드가 잘리지 않도록 충분한 여유)
       const padding = { top: 40, right: 80, bottom: 30, left: 50 };
-      const chartWidth = containerWidth - padding.left - padding.right;
+      const chartWidth = svgWidth - padding.left - padding.right;
       const chartHeight = containerHeight - padding.top - padding.bottom;
 
       if (chartWidth <= 0 || chartHeight <= 0) {
@@ -1014,8 +1018,28 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
       {/* 실제 차트 (항상 렌더링) */}
       <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
-        <div className="flex-1 min-h-0 relative" style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-          <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+        {/* Scrollable container with gradient hint for mobile */}
+        <div className="relative w-full h-full">
+          {/* Horizontal scroll container */}
+          <div 
+            className="flex-1 min-h-0 relative overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-hidden" 
+            style={{ width: '100%', height: '100%' }}
+          >
+            {/* SVG wrapper with min-width for mobile */}
+            <div style={{ minWidth: '1000px', width: '100%', height: '100%' }}>
+              <svg 
+                ref={svgRef} 
+                className="w-full h-full" 
+                style={{ overflow: 'visible' }} 
+              />
+            </div>
+          </div>
+          
+          {/* Scroll hint gradient (mobile only) */}
+          <div 
+            className="md:hidden absolute right-0 top-0 bottom-0 w-12 pointer-events-none bg-gradient-to-l from-gray-900 to-transparent"
+            style={{ opacity: 0.8 }}
+          />
         </div>
       </div>
 

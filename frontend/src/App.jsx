@@ -5,7 +5,9 @@ import HempMap from "./components/charts/HempMap";
 import SankeyChart from "./components/charts/SankeyChart";
 import RadarChart from "./components/charts/RadarChart";
 import ProposalsTable from "./components/charts/ProposalsTable";
+import ChartTitle from "./components/common/ChartTitle";
 import useChainStore from "./store/useChainStore";
+import useUrlSync from "./hooks/useUrlSync";
 import { COLORS } from "./constants/colors";
 
 function App() {
@@ -17,6 +19,9 @@ function App() {
     sankeyFilter,
     fetchChains,
   } = useChainStore();
+
+  // URL 동기화 (Deep Linking)
+  useUrlSync();
 
   const prevSankeyFilterRef = useRef(null);
   const prevMainIdRef = useRef(selectedMainId);
@@ -95,29 +100,32 @@ function App() {
 
           {/* 버블차트 + 레이더차트 - 데스크톱: 가로, 모바일: 세로 */}
           <div
-            className="flex flex-col md:flex-row w-full"
+            className="grid grid-cols-1 md:grid-cols-2 w-full"
             style={{ gap: "12px" }}
           >
           <div
-            className="w-full md:w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
+            className="relative overflow-hidden rounded-2xl shadow-lg"
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
               padding: "20px 0",
-              height: "350px" // 고정 350px
+              minHeight: "450px"
             }}
           >
             <HempMap />
           </div>
 
           <div
-            className="w-full md:w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
+            className="relative overflow-hidden rounded-2xl shadow-lg"
             style={{ 
               backgroundColor: COLORS.GRAYBG, 
-              padding: "20px 0",
-              height: "350px" // 버블 차트와 동일한 350px
+              paddingTop: "20px",
+              paddingBottom: "12px",
+              minHeight: "450px"
             }}
           >
-            <RadarChart />
+            <div className="md:h-full md:overflow-hidden">
+              <RadarChart />
+            </div>
           </div>
           </div>
 

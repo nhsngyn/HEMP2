@@ -8,6 +8,7 @@ const useChainSelection = () => {
     selectedSubId1,
     selectedSubId2,
     applySelection,
+    removeChainById,
   } = useChainStore();
 
   const getSelectionInfo = (id) => {
@@ -23,8 +24,24 @@ const useChainSelection = () => {
     return null;
   };
 
+  /**
+   * 체인 선택/해제 토글
+   * - 이미 선택된 체인을 클릭하면 선택 해제
+   * - 선택되지 않은 체인을 클릭하면 빈 슬롯에 자동 배치
+   */
   const selectChain = (chainId) => {
-    return applySelection(chainId, null);
+    const isSelected = 
+      chainId === selectedMainId || 
+      chainId === selectedSubId1 || 
+      chainId === selectedSubId2;
+
+    if (isSelected) {
+      // 이미 선택된 체인이면 선택 해제 (토글)
+      return removeChainById(chainId);
+    } else {
+      // 선택되지 않은 체인이면 빈 슬롯에 자동 배치
+      return applySelection(chainId, null);
+    }
   };
 
   return {
