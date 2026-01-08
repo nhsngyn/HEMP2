@@ -103,11 +103,11 @@ function App() {
             className="grid grid-cols-1 md:grid-cols-2 w-full items-stretch"
             style={{ gap: "12px" }}
           >
-            <ChartCard number={1} title="HEMP Map" height="auto">
+            <ChartCard number={1} title="HEMP Map" minHeight="300px" maxHeight="400px">
               <HempMap />
             </ChartCard>
 
-            <ChartCard number={2} title="HEMP Comparison Radar Chart" height="auto">
+            <ChartCard number={2} title="HEMP Comparison Radar Chart" minHeight="300px" maxHeight="400px">
               <RadarChart />
             </ChartCard>
           </div>

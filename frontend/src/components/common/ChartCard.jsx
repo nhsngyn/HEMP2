@@ -16,11 +16,13 @@ import ChartTitle from './ChartTitle';
 const ChartCard = ({ number, title, height = "auto", minHeight, maxHeight, noMaxHeight = false, children }) => {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl shadow-lg ${noMaxHeight ? 'max-h-none' : 'max-h-none md:max-h-[300px]'}`}
+      className={`relative overflow-hidden rounded-2xl shadow-lg ${noMaxHeight ? 'max-h-none' : ''}`}
       style={{ 
         backgroundColor: COLORS.GRAYBG,
         padding: "20px",
         height: height === "auto" ? height : height,
+        minHeight: minHeight,
+        maxHeight: noMaxHeight ? 'none' : maxHeight,
         overflowAnchor: 'none'
       }}
     >

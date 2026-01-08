@@ -386,7 +386,7 @@ const RadarChart = () => {
         }}
       >
         <div
-          className="radar_arena w-full flex flex-col md:flex-row items-start gap-5 md:gap-6"
+          className="radar_arena w-full flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-6"
         >
             {/* 레이더 차트 - 모바일: 전체 너비, 데스크톱: 60% */}
             <div 
