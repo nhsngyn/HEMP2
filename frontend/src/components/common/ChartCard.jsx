@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { COLORS } from '../../constants/colors';
 import ChartTitle from './ChartTitle';
 
@@ -11,18 +11,31 @@ import ChartTitle from './ChartTitle';
  * @param {string} minHeight - 카드 최소 높이 (선택)
  * @param {string} maxHeight - 카드 최대 높이 (선택)
  * @param {boolean} noMaxHeight - 최대 높이 제한 제거 (선택)
+ * @param {boolean} mobileNoMaxHeight - 모바일에서만 최대 높이 제한 제거 (선택)
  * @param {React.ReactNode} children - 차트 내용
  */
-const ChartCard = ({ number, title, height = "auto", minHeight, maxHeight, noMaxHeight = false, children }) => {
+const ChartCard = ({ number, title, height = "auto", minHeight, maxHeight, noMaxHeight = false, mobileNoMaxHeight = false, children }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const shouldRemoveMaxHeight = noMaxHeight || (mobileNoMaxHeight && isMobile);
+
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl shadow-lg ${noMaxHeight ? 'max-h-none' : ''}`}
+      className={`relative overflow-hidden rounded-2xl shadow-lg ${shouldRemoveMaxHeight ? 'max-h-none' : ''}`}
       style={{ 
         backgroundColor: COLORS.GRAYBG,
         padding: "20px",
         height: height === "auto" ? height : height,
         minHeight: minHeight,
-        maxHeight: noMaxHeight ? 'none' : maxHeight,
+        maxHeight: shouldRemoveMaxHeight ? 'none' : maxHeight,
         overflowAnchor: 'none'
       }}
     >

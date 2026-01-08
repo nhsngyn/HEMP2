@@ -107,7 +107,7 @@ function App() {
               <HempMap />
             </ChartCard>
 
-            <ChartCard number={2} title="HEMP Comparison Radar Chart" minHeight="300px" maxHeight="400px">
+            <ChartCard number={2} title="HEMP Comparison Radar Chart" minHeight="300px" maxHeight="400px" mobileNoMaxHeight={true}>
               <RadarChart />
             </ChartCard>
           </div>
