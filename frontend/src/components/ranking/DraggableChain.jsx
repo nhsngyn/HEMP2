@@ -25,7 +25,8 @@ const DraggableChain = ({ chain, selectionInfo, onClick, isOverlay = false, isSe
     const dx = Math.abs(e.clientX - downPos.x);
     const dy = Math.abs(e.clientY - downPos.y);
 
-    if (dx < DRAG_CLICK_THRESHOLD && dy < DRAG_CLICK_THRESHOLD && !isDragging && !isSelected) { 
+    // 드래그가 아닌 클릭으로 판단되면 선택/해제 토글
+    if (dx < DRAG_CLICK_THRESHOLD && dy < DRAG_CLICK_THRESHOLD && !isDragging) { 
       onClick?.(); 
     }
 
