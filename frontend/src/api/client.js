@@ -4,7 +4,8 @@ import axios from 'axios';
  * API Base URL
  * 개발 환경에서는 localhost:3000, 배포 환경에서는 실제 API 서버 주소
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
+  || (import.meta.env.MODE === 'production' ? 'https://hemp2.onrender.com' : 'http://localhost:3000');
 
 /**
  * Axios 인스턴스 생성
