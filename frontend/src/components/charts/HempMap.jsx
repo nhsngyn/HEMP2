@@ -9,6 +9,7 @@ import HempMapSkeleton from '../skeletons/HempMapSkeleton';
 const HempMap = () => {
   const chartRef = useRef(null);
   const [showSkeleton, setShowSkeleton] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const {
     allChains,
@@ -34,6 +35,8 @@ const HempMap = () => {
 
   useEffect(() => {
     const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
       chartRef.current?.getEchartsInstance().resize();
     };
     window.addEventListener('resize', handleResize);
@@ -114,10 +117,10 @@ const HempMap = () => {
       textStyle: { fontFamily: 'SUIT' },
 
       grid: {
-        left: 90,
-        right: 30,
-        top: 55,
-        bottom: 32,
+        left: isMobile ? 60 : 90,
+        right: isMobile ? 20 : 30,
+        top: isMobile ? 40 : 55,
+        bottom: isMobile ? 25 : 32,
         containLabel: false,
       },
 
@@ -236,6 +239,7 @@ const HempMap = () => {
     selectedSubId2,
     getSelectionInfo,
     chainMap,
+    isMobile,
   ]);
 
   /* ---------------- events ---------------- */
