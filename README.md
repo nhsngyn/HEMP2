@@ -14,19 +14,23 @@ HEMP(Health Evaluation Metric using Proposals)는 블록체인 프로포절 데�
    - RESTful API를 통한 데이터 제공
    - 확장 가능한 서버 아키텍처 구축
 
-2. **반응형 디자인**
-   - 모바일 환경 최적화
-   - 랭킹 차트는 Drawer로 구현
-   - 차트들을 세로로 나열하여 스크롤 가능
+2. **완전한 모바일 반응형 디자인**
+   - 햄버거 메뉴를 통한 사이드바 접기/펼치기
+   - 차트 세로 스택 배치 (모바일)
+   - 반응형 폰트 스케일링 (CSS 변수 기반)
+   - 가로 스크롤 UI (생키 차트, 프로포절 리스트)
+   - 레이더 차트 메트릭 정보 세로 배치
 
 3. **향상된 인터랙션**
    - 버블 차트 클릭을 통한 체인 선택
    - 우선순위 기반 슬롯 할당 (Main → Sub1 → Sub2)
-   - Reset 버튼으로 선택 초기화
+   - 생키 차트 재선택 시 프로포절 리스트 토글
+   - 빈 슬롯부터 자동 채우기
 
 4. **개선된 로딩 경험**
-   - Skeleton UI 구현
-   - 로딩 상태 시각화
+   - Skeleton UI 구현 (버블, 레이더, 생키 차트)
+   - 300ms 페이드 전환 애니메이션
+   - 실제 차트 레이아웃 반영
 
 ## 🏗️ 프로젝트 구조
 
@@ -35,9 +39,13 @@ HEMP2/
 ├── frontend/          # React + Vite 프론트엔드
 │   ├── src/
 │   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── store/
-│   │   └── constants/
+│   │   │   ├── charts/        # 차트 컴포넌트
+│   │   │   ├── skeletons/     # Skeleton UI
+│   │   │   ├── layout/        # 레이아웃 (MainLayout, Sidebar)
+│   │   │   └── common/        # 공통 컴포넌트
+│   │   ├── store/             # Zustand 상태 관리
+│   │   ├── constants/         # 상수 (색상, 설정)
+│   │   └── data/              # Mock 데이터
 │   └── package.json
 │
 ├── backend/           # Express + TypeScript 백엔드
@@ -72,10 +80,9 @@ HEMP2/
 
 #### 프론트엔드
 - `feature/frontend-api-integration`: API 연동
-- `feature/responsive-layout`: 반응형 레이아웃
-- `feature/bubble-click-selection`: 버블 차트 클릭 선택
-- `feature/reset-chain-selection`: 리셋 버튼 구현
-- `feature/skeleton-ui`: 스켈레톤 UI 구현
+- `feature/mobile-responsive`: 모바일 반응형 레이아웃
+- `feature/interaction-improvements`: 버블 클릭 선택 & 생키 토글
+- `feature/skeleton-ui-completion`: 스켈레톤 UI 구현
 
 ## 📝 커밋 컨벤션
 
@@ -97,24 +104,44 @@ type(scope): message
 feat(backend): initialize express server
 feat(api): add chain data endpoint
 feat(frontend): connect api to bubble chart
-feat(ui): implement responsive mobile layout
+feat(ui): implement mobile responsive layout with hamburger menu
 feat(chart): enable chain selection by bubble click
-feat(state): add reset button for chain slots
-feat(ui): add skeleton ui for loading state
+feat(ui): add skeleton ui for all charts
+feat(responsive): add horizontal scroll for sankey and proposals
 fix(chart): prevent duplicate chain selection
 refactor(state): simplify chain slot priority logic
 ```
 
 ## 🚀 시작하기
 
-### Frontend
+### 전체 실행 (권장)
+
+#### 1. Backend 실행
+```bash
+cd backend
+npm install
+npm run dev
+# Backend: http://localhost:3000
+```
+
+#### 2. Frontend 실행 (새 터미널)
+```bash
+cd frontend
+npm install
+npm run dev
+# Frontend: http://localhost:5173
+```
+
+### 개별 실행
+
+#### Frontend만 실행 (Mock 데이터)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### Backend
+#### Backend만 실행
 ```bash
 cd backend
 npm install
@@ -124,32 +151,113 @@ npm run dev
 ## 🛠️ 기술 스택
 
 ### Frontend
-- React 19
-- Vite
-- D3.js
-- Zustand
-- TailwindCSS
+- **React 19**: UI 라이브러리
+- **Vite**: 빌드 도구
+- **D3.js**: 데이터 시각화 (생키, 버블)
+- **ECharts**: 차트 라이브러리 (레이더)
+- **Zustand**: 상태 관리
+- **TailwindCSS**: 유틸리티 기반 CSS
+- **Axios**: HTTP 클라이언트
 
 ### Backend
-- Node.js
-- Express
-- TypeScript
+- **Node.js**: 런타임
+- **Express**: 웹 프레임워크
+- **TypeScript**: 타입 안정성
+- **Helmet**: 보안 미들웨어
+- **Morgan**: 로깅 미들웨어
+- **CORS**: 크로스 오리진 리소스 공유
 
 ## 📊 주요 기능
 
-1. **Hemp Map**: 체인별 건강도를 버블 차트로 시각화
-2. **Radar Chart**: 다차원 평가 지표 비교
-3. **Sankey Chart**: 프로포절 흐름 시각화
-4. **Proposals Table**: 프로포절 상세 정보 테이블
-5. **Ranking Chart**: DnD 기반 체인 랭킹 및 비교
+### 1. **HEMP Map (버블 차트)**
+- 체인별 건강도를 2차원 버블로 시각화
+- X축: HEMP Score, Y축: Participation
+- 버블 크기: 전체 프로포절 수
+- 클릭으로 체인 선택 (Main/Sub1/Sub2 슬롯)
+
+### 2. **Radar Chart**
+- 5가지 지표 다차원 비교
+  - VIB (Validator Influence Balance)
+  - Participation
+  - Success Rate
+  - Stability
+  - Consensus
+- Main, Sub1, Sub2 체인 동시 비교
+- 메트릭 정보 표시 (모바일: 차트 하단)
+
+### 3. **Sankey Chart**
+- 프로포절 구성 플로우 시각화
+- 5단계 흐름: Type → Status → Participation → Vote Composition → Processing Speed
+- 링크 클릭으로 필터링
+- 가로 스크롤 지원 (1800px 고정 너비)
+
+### 4. **Proposals Table**
+- 선택된 체인의 프로포절 상세 정보
+- 생키 차트 필터링 연동
+- 가로 스크롤 지원
+
+### 5. **Ranking Chart (사이드바)**
+- DnD 기반 체인 랭킹 및 비교
+- Main/Sub1/Sub2 슬롯 관리
+- 모바일: 햄버거 메뉴로 접기/펼치기
 
 ## 📱 반응형 디자인
 
-- **Desktop**: 기존 레이아웃 유지
-- **Mobile**: 
-  - 랭킹 차트 → Drawer
-  - 차트들 세로 배치
-  - 터치 최적화
+### Desktop (≥768px)
+- 사이드바 고정 표시
+- 버블 + 레이더 차트 가로 배치
+- 차트 스케일 1.0 (원본 크기)
+
+### Mobile (<768px)
+- 햄버거 메뉴로 사이드바 접기
+- 모든 차트 세로 배치
+- 반응형 폰트 스케일 (0.4~0.6)
+- 레이더 차트 메트릭 하단 배치
+- 생키/프로포절 가로 스크롤
+
+### 주요 반응형 기술
+- **CSS 변수 스케일링**: `--scale` 변수로 전역 폰트 크기 조정
+- **Tailwind Breakpoints**: `md:` prefix 활용
+- **clamp() 함수**: 반응형 여백/간격
+- **스크롤바 위치 제어**: `rotateX(180deg)` 트릭으로 상단 스크롤
+
+## 🎨 디자인 시스템
+
+### 색상 팔레트
+- **Main Chain**: `#93E729` (Green)
+- **Sub1 Chain**: `#3CA7C4` (Sky Blue)
+- **Sub2 Chain**: `#BBB143` (Yellow)
+- **Background**: `#17181C` (Dark Gray)
+
+### 타이포그래피
+- Font Family: SUIT
+- 스케일 기반 폰트 크기 (12px~22px)
+- 반응형 스케일 적용 (`calc(size * var(--scale))`)
+
+## 🔧 개발 가이드
+
+### 새 차트 추가하기
+1. `src/components/charts/` 에 차트 컴포넌트 생성
+2. `src/components/skeletons/` 에 Skeleton 컴포넌트 생성
+3. `App.jsx` 에 차트 추가 및 레이아웃 조정
+4. Zustand store에 필요한 상태 추가
+
+### API 엔드포인트 추가
+1. `backend/src/routes/` 에 라우트 정의
+2. `backend/src/controllers/` 에 컨트롤러 로직
+3. `backend/src/services/` 에 비즈니스 로직
+4. Frontend `store/` 에서 API 호출
+
+## ⚡ 성능 최적화
+
+- **Skeleton UI**: 로딩 중 300ms 페이드 전환
+- **useMemo**: 차트 데이터 계산 메모이제이션
+- **CSS 변수**: 스케일 계산 최적화
+- **가로 스크롤**: 큰 차트 성능 유지
+
+## 🐛 알려진 이슈
+
+- 없음 (현재 안정 버전)
 
 ## 🔗 관련 링크
 
@@ -164,3 +272,18 @@ npm run dev
 
 MIT License
 
+---
+
+## 📈 버전 히스토리
+
+### v2.0.0 (2025-01-06)
+- ✅ Backend/Frontend 분리
+- ✅ 완전한 모바일 반응형
+- ✅ 햄버거 메뉴 구현
+- ✅ Skeleton UI 완성
+- ✅ 버블 클릭 선택
+- ✅ 가로 스크롤 UI
+- ✅ 반응형 폰트 스케일링
+
+### v1.0.0
+- 초기 HEMP 프로젝트

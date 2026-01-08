@@ -7,10 +7,10 @@ const Sidebar = () => {
       className="
         flex flex-col
         w-full h-full
-        py-[50px]
         px-[24px] pr-[22px]
         text-white
       "
+      style={{ paddingTop: '50px', paddingBottom: '62px' }}
     >
       {/* 상단 타이틀 */}
       <div className="mb-[40px]">

@@ -2,7 +2,6 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import * as d3 from 'd3';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
-import ChartTitle from '../common/ChartTitle';
 import RadarChartSkeleton from '../skeletons/RadarChartSkeleton';
 
 const METRICS = [
@@ -15,8 +14,10 @@ const METRICS = [
 
 const CHART_CONFIG = {
   GRID_LEVELS: 5,
-  PADDING: 70,
-  LABEL_OFFSET: 40,
+  RADAR_SIZE: 240, // 가장 큰 정오각형 폴리곤의 가로세로 크기 (174 -> 240, 약 38% 증가)
+  TOTAL_WIDTH: 315, // 라벨 포함 전체 가로 크기
+  TOTAL_HEIGHT: 213, // 라벨 포함 전체 세로 크기
+  TOP_MARGIN: 20, // 타이틀과 VIB 요소 사이의 여백
 };
 
 const CHAIN_CONFIGS = [
@@ -130,11 +131,24 @@ const RadarChart = () => {
       const svg = d3.select(svgRef.current);
       svg.attr('width', containerWidth).attr('height', containerHeight);
 
-      // 차트 설정
-      const size = Math.min(containerWidth, containerHeight) - CHART_CONFIG.PADDING * 2;
-      const centerX = containerWidth / 2 - 2;
-      const centerY = containerHeight / 2 + 13;
-      const radius = size / 1.5 * 0.9;
+      // 차트 설정 - 반응형 레이더 크기 계산
+      // 컨테이너 크기에 맞춰 레이더 크기 조정
+      const labelGap = 8; // 정오각형 모서리와 라벨 끝 사이 간격
+      const labelSpace = 50; // 라벨을 위한 공간 (양쪽)
+      
+      // 컨테이너에서 라벨 공간을 빼고 남은 공간의 80%를 레이더 크기로 사용
+      const availableWidth = containerWidth - labelSpace * 2;
+      const availableHeight = containerHeight - labelSpace * 2;
+      const radarSize = Math.min(availableWidth, availableHeight, 300) * 0.8; // 최대 300px
+      
+      const radius = radarSize / 2;
+      const centerX = containerWidth / 2;
+      const centerY = containerHeight / 2;
+      
+      // 라벨 오프셋 계산
+      const totalPadding = (CHART_CONFIG.TOTAL_WIDTH - CHART_CONFIG.RADAR_SIZE) / 2;
+      const labelOffset = totalPadding - labelGap;
+      
       const numAxes = METRICS.length;
       const angleStep = (2 * Math.PI) / numAxes;
 
@@ -184,9 +198,9 @@ const RadarChart = () => {
             .attr('stroke-width', 1)
             .attr('opacity', 0.5);
 
-          // 축 라벨
-          const labelX = centerX + Math.cos(angle) * (radius + CHART_CONFIG.LABEL_OFFSET + 3);
-          const labelY = centerY + Math.sin(angle) * (radius + CHART_CONFIG.LABEL_OFFSET - 10);
+          // 축 라벨 (정오각형 모서리로부터 labelOffset 거리)
+          const labelX = centerX + Math.cos(angle) * (radius + labelOffset);
+          const labelY = centerY + Math.sin(angle) * (radius + labelOffset);
 
           if (metric.key === 'vib') {
             // VIB는 두 줄로 표시
@@ -197,8 +211,9 @@ const RadarChart = () => {
               .attr('dominant-baseline', 'middle')
               .attr('fill', '#9ca3af')
               .attr('font-family', 'SUIT')
-              .attr('font-size', '11px')
-              .attr('font-weight', '700');
+              .attr('font-size', '12px')
+              .attr('font-weight', '500')
+              .attr('letter-spacing', '-0.24px'); // -0.02em = -0.24px at 12px
 
             textGroup.append('tspan')
               .attr('x', labelX)
@@ -207,10 +222,10 @@ const RadarChart = () => {
 
             textGroup.append('tspan')
               .attr('x', labelX)
-              .attr('dy', '1.2em')
+              .attr('dy', '1.3em') // 130% line-height
               .text('Influence Balance)');
           } else {
-            // 다른 메트릭은 한 줄로 표시
+            // 다른 메트릭은 한 줄로 표시 (caption1-m)
             axesGroup.append('text')
               .attr('x', labelX)
               .attr('y', labelY)
@@ -218,8 +233,9 @@ const RadarChart = () => {
               .attr('dominant-baseline', 'middle')
               .attr('fill', '#9ca3af')
               .attr('font-family', 'SUIT')
-              .attr('font-size', '11px')
-              .attr('font-weight', '700')
+              .attr('font-size', '12px')
+              .attr('font-weight', '500')
+              .attr('letter-spacing', '-0.24px') // -0.02em = -0.24px at 12px
               .text(metric.label);
           }
         });
@@ -354,214 +370,121 @@ const RadarChart = () => {
 
 
   return (
-    <div className="w-full h-full relative">
-      <ChartTitle number={2} title="HEMP Comparison Radar Chart" />
-      
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '30px' }}>
-        {showSkeleton && <RadarChartSkeleton showShimmer={true} />}
-      </div>
+    <div className="w-full h-full relative" style={{ overflowAnchor: 'none' }}>
+      {/* Skeleton 오버레이 (로딩 중에만 표시) */}
+      {showSkeleton && (
+        <div className="absolute inset-0 z-10 transition-opacity duration-300">
+          <RadarChartSkeleton showShimmer={true} />
+        </div>
+      )}
 
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '30px' }}>
-        {!showSkeleton && (
-          <div
-            className="radar_arena w-full h-full flex my-1 min-h-0"
-            style={{
-              gap: 'clamp(16px, 1.5vw, 24px)',
-              padding: 'clamp(8px, 0.6vw, 12px)'
-            }}
-          >
-            {/* 왼쪽: 레이더 차트 (60%) */}
-            <div ref={radarContainerRef} className="h-full" style={{ width: '65%' }}>
-              <svg ref={svgRef} className="w-full h-full mt-4" />
+      {/* 실제 차트 (항상 렌더링) */}
+      <div 
+        className="transition-opacity duration-300 relative" 
+        style={{ 
+          opacity: showSkeleton ? 0 : 1
+        }}
+      >
+        <div
+          className="radar_arena w-full flex flex-col md:flex-row items-start gap-5 md:gap-6"
+        >
+            {/* 레이더 차트 - 모바일: 전체 너비, 데스크톱: 60% */}
+            <div 
+              ref={radarContainerRef} 
+              className="w-full md:w-[60%] shrink-0 flex items-center justify-center" 
+              style={{ minHeight: '300px', height: 'auto' }}
+            >
+              <svg ref={svgRef} className="w-full h-full" />
             </div>
 
-        {/* Divider */}
-        <div className="border-r border-gray-700 my-auto" style={{ height: '99%' }}></div>
+        {/* Divider - 모바일: 가로선 */}
+        <div className="md:hidden border-t border-gray-700 w-full" style={{ margin: '0 -24px', width: 'calc(100% + 48px)' }}></div>
 
-        {/* 오른쪽: 점수 정보 (40%) */}
+        {/* 점수 정보 - 모바일: 전체 너비, 데스크톱: 40% + 왼쪽 테두리 + 상단 정렬 + 오른쪽/하단 패딩 */}
         <div
-          className="info_arena h-full flex flex-col min-h-0 overflow-hidden"
+          className="info_arena w-full md:w-[40%] flex flex-col md:border-l border-gray-700 md:pl-6 md:pr-5 md:pb-5"
           style={{
-            width: '35%',
-            gap: 'clamp(4px, 0.5vh, 8px)',
-            paddingTop: 'clamp(2px, 0.6vw, 2px)',
-            paddingBottom: 'clamp(2px, 0.6vw, 10px)',
-            paddingLeft: 'clamp(2px, 0.7vw, 2px)',
-            paddingRight: 'clamp(4px, 0.7vw, 6px)',
+            gap: '4px',
             boxSizing: 'border-box'
           }}
         >
-          {/* Chain name badge 또는 Median 레이블 */}
-          <div className="flex justify-start shrink-0">
+          {/* Chain name badge */}
+          <div className="flex justify-start">
             <div
-              className="rounded-md shrink-0"
               style={{
                 backgroundColor: '#282a2e',
-                padding: 'clamp(2px, 0.25vw, 2px) clamp(8px, 0.7vw, 8px)',
-                maxWidth: '100%',
-                boxSizing: 'border-box'
+                borderRadius: '3px',
+                paddingTop: '3px',
+                paddingRight: '6px',
+                paddingBottom: '3px',
+                paddingLeft: '6px',
+                gap: '3px',
+                display: 'inline-flex',
+                height: '22px',
+                alignItems: 'center'
               }}
             >
-              {mainChain ? (
-                <span
-                  className="font-bold truncate block max-w-full"
-                  style={{
-                    color: '#80ff00',
-                    fontSize: 'clamp(15px, 0.65vw, 13px)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    fontWeight: '500',
-                    fontFamily: 'SUIT'
-                  }}
-                >
-                  {mainChain.name}
-                </span>
-              ) : (
-                <span
-                  className="font-bold truncate block max-w-full"
-                  style={{
-                    color: '#9ca3af',
-                    fontSize: 'clamp(14px, 0.65vw, 13px)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    fontWeight: '500',
-                    fontFamily: 'SUIT'
-                  }}
-                >
-                  Median
-                </span>
-              )}
+              <span
+                style={{
+                  fontFamily: 'SUIT',
+                  fontWeight: 500,
+                  fontSize: 'clamp(13px, 3vw, 14px)',
+                  lineHeight: '140%',
+                  letterSpacing: '-0.02em',
+                  color: mainChain ? COLORS.MAIN : '#9ca3af'
+                }}
+              >
+                {mainChain ? mainChain.name : 'Median'}
+              </span>
             </div>
           </div>
 
-          {/* HEMP Score 영역 (3.5/10) */}
-          <div
-            className="flex flex-col min-h-0 shrink-0"
-            style={{
-              flex: '3.5 0 0',
-              gap: 'clamp(3px, 0.4vh, 6px)',
-              maxHeight: '100%',
-              overflow: 'hidden',
-              justifyContent: 'flex-start'
-            }}
-          >
-            <div className="flex flex-col shrink-0" style={{ gap: 'clamp(2px, 0.25vh, 4px)' }}>
-              <p
-                className="text-gray-100 font-bold shrink-0"
+          {/* HEMP Score */}
+          <div className="flex flex-col" style={{ gap: '6px' }}>
+            <p style={{ fontFamily: 'SUIT', fontWeight: 700, fontSize: '18px', lineHeight: '145%', letterSpacing: '-0.01em', color: '#E8EAED' }}>
+              HEMP Score
+            </p>
+            <div className="flex items-baseline gap-2 justify-end">
+              <span
                 style={{
-                  fontSize: 'clamp(20px, 0.85vw, 20px)',
-                  lineHeight: 'clamp(1.2, 1.3vh, 1.4)',
-                  margin: 0
+                  fontFamily: 'SUIT',
+                  fontWeight: 800,
+                  fontSize: '24px',
+                  lineHeight: '110%',
+                  letterSpacing: '0%',
+                  textAlign: 'center',
+                  color: mainChain ? COLORS.MAIN : '#FFFFFF'
                 }}
               >
-                HEMP Score
-              </p>
-              <div
-                className="flex items-baseline justify-end shrink-0"
-                style={{
-                  gap: 'clamp(1px, 0.12vw, 2px)',
-                  // marginTop: 'clamp(8px, 0.5vh, 8px)'
-                }}
-              >
-                <span
-                  className="font-bold shrink-0"
-                  style={{
-                    color: mainChain ? COLORS.MAIN : '#FFFFFF',
-                    fontSize: 'clamp(18px, 2.5vw, 30px)',
-                    lineHeight: '1',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {scorePercentage}
-                </span>
-                <span
-                  className="text-gray-500 shrink-0"
-                  style={{
-                    fontSize: 'clamp(18px, 0.75vw, 15px)',
-                    lineHeight: 'clamp(1.2, 1.3vh, 1.4)',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  /100
-                </span>
-              </div>
+                {scorePercentage}
+              </span>
+              <span style={{ fontFamily: 'SUIT', fontWeight: 500, fontSize: 'clamp(12px, 3vw, 14px)', lineHeight: '140%', letterSpacing: '-0.02em', color: '#4C5564' }}>
+                /100
+              </span>
             </div>
-            {/* Divider */}
-            <div
-              className="border-t border-gray-700 shrink-0 "
-              style={{ marginTop: 'clamp(10px, 1.5vh, 8px)', marginRight: '1px' }}
-            ></div>
           </div>
 
-          {/* Individual metric scores 영역 (6.5/10) */}
-          <div
-            className="flex flex-col min-h-0 overflow-hidden"
-            style={{
-              flex: '6.5 0 0',
-              gap: 'clamp(1px, 0.2vh, 3px)',
-              maxHeight: '100%',
-              justifyContent: 'space-between'
-            }}
-          >
+          {/* Divider */}
+          <div className="border-t border-gray-700" style={{ marginTop: '3.5px', marginBottom: '3.5px' }}></div>
+
+          {/* Individual metric scores */}
+          <div className="flex flex-col" style={{ gap: '6px' }}>
             {METRICS.map(metric => {
               const value = getValue(displayChain, metric.key);
-              // Score label에서는 VIB만 표시
               const displayLabel = metric.key === 'vib' ? 'VIB' : metric.label;
               return (
                 <div
                   key={metric.key}
-                  className="flex justify-between items-center shrink-0"
-                  style={{
-                    gap: 'clamp(6px, 0.8vw, 12px)',
-                    paddingTop: 'clamp(0px, 0.1vh, 2px)',
-                    paddingBottom: 'clamp(0px, 0.1vh, 2px)',
-                    minHeight: 0,
-                    flex: '1 1 0'
-                  }}
+                  className="flex justify-between items-center"
                 >
-                  <span
-                    className="text-gray-300 font-semibold shrink-0"
-                    style={{
-                      fontSize: 'clamp(15px, 0.7vw, 14px)',
-                      lineHeight: 'clamp(1.2, 1.3vh, 1.4)',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
-                  >
+                  <span style={{ fontFamily: 'SUIT', fontWeight: 500, fontSize: 'clamp(13px, 3vw, 14px)', lineHeight: '140%', letterSpacing: '-0.02em', color: '#9CA3AE' }}>
                     {displayLabel}
                   </span>
-                  <div
-                    className="flex items-baseline shrink-0"
-                    style={{
-                      gap: 'clamp(1px, 0.12vw, 2px)',
-                      minWidth: '60px',
-                      justifyContent: 'flex-end'
-                    }}
-                  >
-                    <span
-                      className="text-white font-semibold shrink-0"
-                      style={{
-                        fontSize: 'clamp(18px, 0.7vw, 12px)',
-                        lineHeight: 'clamp(1.2, 1.3vh, 1.4)',
-                        whiteSpace: 'nowrap',
-                        textAlign: 'right',
-                        display: 'inline-block',
-                        minWidth: '20px'
-                      }}
-                    >
+                  <div className="flex items-baseline gap-1">
+                    <span style={{ fontFamily: 'SUIT', fontWeight: 500, fontSize: 'clamp(15px, 3.5vw, 16px)', lineHeight: '140%', letterSpacing: '-0.02em', minWidth: '40px', textAlign: 'right', color: '#FFFFFF' }}>
                       {Math.round(value)}
                     </span>
-                    <span
-                      className="text-gray-500 shrink-0"
-                      style={{
-                        fontSize: 'clamp(16px, 0.7vw, 14px)',
-                        lineHeight: 'clamp(1.40, 1.3vh, 1.4)',
-                        whiteSpace: 'nowrap'
-                      }}
-                    >
+                    <span style={{ fontFamily: 'SUIT', fontWeight: 500, fontSize: 'clamp(13px, 3vw, 14px)', lineHeight: '140%', letterSpacing: '-0.02em', color: '#4C5564' }}>
                       /{metric.maxValue}
                     </span>
                   </div>
@@ -570,8 +493,7 @@ const RadarChart = () => {
             })}
           </div>
         </div>
-          </div>
-        )}
+        </div>
       </div>
     </div >
   );

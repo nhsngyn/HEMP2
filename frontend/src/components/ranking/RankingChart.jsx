@@ -100,33 +100,33 @@ const RankingChart = () => {
     >
       <div className="flex flex-col h-full w-full relative select-none">
         <div className="flex items-center gap-3 shrink-0" style={{ marginBottom: '12px' }}>
-          <h2 className="text-body2-b text-gray-200">HEMP Rank</h2>
+          <h2 className="text-gray-200" style={{ fontSize: '16px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '700' }}>HEMP Rank</h2>
         </div>
 
         <div
           className="flex items-center gap-4 mb-1 pb-3 shrink-0 border-b border-gray-700 w-full"
-          style={{ paddingTop: 'calc(20px * var(--scale))' }}
+          style={{ paddingTop: '20px' }}
         >
           <button
             className="flex items-center gap-1"
             onClick={() => handleSortClick("name")}
             style={{ paddingLeft: '8px' }}
           >
-            <span className={`text-caption1-sb ${sortConfig.key === "name" ? "text-white" : "text-gray-400"}`}>
+            <span className={sortConfig.key === "name" ? "text-white" : "text-gray-400"} style={{ fontSize: '12px', lineHeight: '130%', letterSpacing: '-0.02em', fontWeight: '600' }}>
               Name
             </span>
             <img src={getSortIcon("name")} className="w-6 h-6" alt="sort by name" />
           </button>
 
           <button className="flex items-center gap-1" onClick={() => handleSortClick("score")}>
-            <span className={`text-caption1-sb ${sortConfig.key === "score" ? "text-white" : "text-gray-400"}`}>
+            <span className={sortConfig.key === "score" ? "text-white" : "text-gray-400"} style={{ fontSize: '12px', lineHeight: '130%', letterSpacing: '-0.02em', fontWeight: '600' }}>
               HEMP Score
             </span>
             <img src={getSortIcon("score")} className="w-6 h-6" alt="sort by score" />
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden mb-[35px]">
+        <div className="min-h-0 overflow-y-auto overflow-x-hidden mb-[35px]" style={{ maxHeight: '443px' }}>
           <DroppableListArea>
             {sortedChains.map((chain) => {
               const isSelected = selectedIds.includes(chain.id);
@@ -145,7 +145,7 @@ const RankingChart = () => {
 
         <div className="shrink-0 flex flex-col" style={{ gap: "35px" }}>
           <div>
-            <h3 className="text-body3-m text-gray-500 mb-2">Main</h3>
+            <h3 className="text-gray-500 mb-2" style={{ fontSize: '14px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '500' }}>Main</h3>
             <DroppableSlot
               id="main"
               color="main"
@@ -156,7 +156,7 @@ const RankingChart = () => {
           </div>
 
           <div>
-            <h3 className="text-body3-m text-gray-500 mb-2">Comparison</h3>
+            <h3 className="text-gray-500 mb-2" style={{ fontSize: '14px', lineHeight: '140%', letterSpacing: '-0.02em', fontWeight: '500' }}>Comparison</h3>
             <div className="flex flex-col gap-2">
               <DroppableSlot
                 id="sub1"

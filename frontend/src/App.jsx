@@ -5,7 +5,9 @@ import HempMap from "./components/charts/HempMap";
 import SankeyChart from "./components/charts/SankeyChart";
 import RadarChart from "./components/charts/RadarChart";
 import ProposalsTable from "./components/charts/ProposalsTable";
+import ChartCard from "./components/common/ChartCard";
 import useChainStore from "./store/useChainStore";
+import useUrlSync from "./hooks/useUrlSync";
 import { COLORS } from "./constants/colors";
 
 function App() {
@@ -17,6 +19,9 @@ function App() {
     sankeyFilter,
     fetchChains,
   } = useChainStore();
+
+  // URL 동기화 (Deep Linking)
+  useUrlSync();
 
   const prevSankeyFilterRef = useRef(null);
   const prevMainIdRef = useRef(selectedMainId);
@@ -71,7 +76,7 @@ function App() {
         <section
           className="w-full flex flex-col"
           style={{
-            paddingTop: "51px",
+            paddingTop: "clamp(60px, 8vw, 25px)", // 모바일: 60px (햄버거 버튼 공간), 데스크톱: 25px
             paddingLeft: "clamp(12px, 3vw, 24px)",
             paddingRight: "clamp(12px, 3vw, 24px)",
             paddingBottom: "24px",
@@ -95,49 +100,23 @@ function App() {
 
           {/* 버블차트 + 레이더차트 - 데스크톱: 가로, 모바일: 세로 */}
           <div
-            className="flex flex-col md:flex-row w-full"
+            className="grid grid-cols-1 md:grid-cols-2 w-full items-stretch"
             style={{ gap: "12px" }}
           >
-          <div
-            className="w-full md:w-[52%] relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ 
-              backgroundColor: COLORS.GRAYBG, 
-              padding: "20px 0",
-              height: "350px",
-              minHeight: "300px"
-            }}
-          >
-            <HempMap />
+            <ChartCard number={1} title="HEMP Map" height="auto">
+              <HempMap />
+            </ChartCard>
+
+            <ChartCard number={2} title="HEMP Comparison Radar Chart" height="auto">
+              <RadarChart />
+            </ChartCard>
           </div>
 
-          <div
-            className="w-full md:w-[48%] relative overflow-hidden rounded-2xl shadow-lg"
-            style={{ 
-              backgroundColor: COLORS.GRAYBG, 
-              padding: "20px 0",
-              height: "350px",
-              minHeight: "300px"
-            }}
-          >
-            <RadarChart />
-          </div>
-          </div>
-
-          {/* 생키차트 - 데스크톱: viewport 기반, 모바일: 고정 높이 */}
-          <div
-            className="w-full relative overflow-hidden rounded-2xl shadow-lg shrink-0"
-            style={{ 
-              backgroundColor: COLORS.GRAYBG, 
-              marginBottom: "59px",
-              padding: "20px 0" 
-            }}
-          >
-            <div className="hidden md:block w-full" style={{ height: "calc(100vh - 51px - 88px - 350px - 12px - 59px)", minHeight: "300px" }}>
+          {/* 생키차트 - 가로 스크롤 가능하므로 더 크게 */}
+          <div style={{ marginBottom: "clamp(12px, 3vw, 59px)" }}>
+            <ChartCard number={3} title="Proposal Configuration Flow" height="clamp(400px, 80vh, 600px)" noMaxHeight={true}>
               <SankeyChart />
-            </div>
-            <div className="block md:hidden w-full" style={{ height: "400px" }}>
-              <SankeyChart />
-            </div>
+            </ChartCard>
           </div>
         </section>
 

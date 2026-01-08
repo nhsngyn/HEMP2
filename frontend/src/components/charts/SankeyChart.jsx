@@ -4,7 +4,6 @@ import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
 import useChainStore from '../../store/useChainStore';
 import { COLORS } from '../../constants/colors';
 import { sankeyMockPropositions, defaultDummyPropositions } from '../../data/sankeyMockData';
-import ChartTitle from '../common/ChartTitle';
 import SankeyChartSkeleton from '../skeletons/SankeyChartSkeleton';
 
 const TYPE_COLOR_PALETTE = [
@@ -314,6 +313,8 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const propositionInfoRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const topScrollRef = useRef(null);
   const { allChains, selectedMainId, setSankeyFilter, clearSankeyFilter, isLoading } = useChainStore();
   const [selectedLink, setSelectedLink] = useState(null);
   const [showSkeleton, setShowSkeleton] = useState(true);
@@ -370,6 +371,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
       // Clear previous render
       d3.select(svgRef.current).selectAll('*').remove();
 
+      // 컨테이너 너비에 맞춤 (반응형)
       const containerWidth = containerRef.current.clientWidth || width;
       const containerHeight = containerRef.current.clientHeight || height;
 
@@ -378,8 +380,12 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         return;
       }
 
+      // 모바일에서는 최소 1000px 너비 보장 (가로 스크롤용)
+      const isMobile = window.innerWidth < 768;
+      const svgWidth = isMobile ? Math.max(containerWidth, 1000) : containerWidth;
+
       const svg = d3.select(svgRef.current);
-      svg.attr('width', containerWidth)
+      svg.attr('width', svgWidth)
         .attr('height', containerHeight)
         .style('overflow', 'visible');
 
@@ -397,7 +403,7 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         const errorGroup = svg.append('g')
           .attr('class', 'error-message')
           .attr('transform', `translate(${containerWidth / 2}, ${containerHeight / 2})`);
-
+        
         errorGroup.append('text')
           .attr('text-anchor', 'middle')
           .attr('fill', '#ef4444')
@@ -453,8 +459,8 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
         return;
       }
       // padding 값 조절 - 차트가 잘리지 않도록 여유 공간 확보 (라벨과 노드가 잘리지 않도록 충분한 여유)
-      const padding = { top: 40, right: 80, bottom: 30, left: 50 };
-      const chartWidth = containerWidth - padding.left - padding.right;
+      const padding = { top: 40, right: 20, bottom: 30, left: 20 };
+      const chartWidth = svgWidth - padding.left - padding.right;
       const chartHeight = containerHeight - padding.top - padding.bottom;
 
       if (chartWidth <= 0 || chartHeight <= 0) {
@@ -997,18 +1003,44 @@ const SankeyChart = ({ width = 1400, height = 700 }) => {
 
   return (
     <div ref={containerRef} className="w-full h-full relative flex flex-col" style={{ overflow: 'visible' }}>
-      <ChartTitle number={3} title="Proposal Configuration Flow" />
-      
-      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 1 : 0, top: '54px' }}>
-        {showSkeleton && <SankeyChartSkeleton showShimmer={true} />}
-      </div>
+      {/* Skeleton 오버레이 (로딩 중에만 표시) */}
+      {showSkeleton && (
+        <div className="absolute inset-0 z-10 transition-opacity duration-300" style={{ top: '54px' }}>
+          <SankeyChartSkeleton showShimmer={true} />
+        </div>
+      )}
 
+      {/* 실제 차트 (항상 렌더링) */}
       <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: showSkeleton ? 0 : 1, top: '34px', paddingBottom: '20px' }}>
-        {!showSkeleton && (
-          <div className="flex-1 min-h-0 relative" style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
-            <svg ref={svgRef} className="w-full h-full" style={{ overflow: 'visible' }} />
+        {/* Scrollable container with blur hint */}
+        <div className="relative w-full h-full">
+          {/* Horizontal scroll container */}
+          <div 
+            ref={scrollContainerRef}
+            className="relative overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-hidden h-full" 
+            style={{ width: '100%' }}
+          >
+            {/* SVG wrapper with min-width for mobile */}
+            <div style={{ minWidth: '1000px', width: '100%', height: '100%' }}>
+              <svg 
+                ref={svgRef} 
+                className="w-full h-full" 
+                style={{ overflow: 'visible' }} 
+              />
+            </div>
           </div>
-        )}
+          
+          {/* Blur hint - 오른쪽에 더 많은 내용이 있음을 표시 */}
+          <div 
+            className="md:hidden absolute right-0 top-0 bottom-0 pointer-events-none"
+            style={{ 
+              width: '20px',
+              background: 'linear-gradient(to left, rgba(23, 23, 23, 0.95), transparent)',
+              backdropFilter: 'blur(2px)',
+              WebkitBackdropFilter: 'blur(2px)'
+            }}
+          />
+        </div>
       </div>
 
     </div>
