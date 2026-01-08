@@ -16,7 +16,10 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? CORS_ORIGIN 
+    ? [
+        CORS_ORIGIN,
+        /\.vercel\.app$/  // 모든 Vercel 도메인 허용
+      ]
     : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
   credentials: true
 }));
