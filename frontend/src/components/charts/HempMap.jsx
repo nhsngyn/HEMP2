@@ -313,53 +313,6 @@ const HempMap = () => {
 
   return (
     <div className="w-full h-full relative">
-      {/* 인포메이션 툴팁 영역 - 타이틀과 같은 높이로 정렬 */}
-      <div 
-        className="absolute z-50 group"
-        style={{ top: '20px', right: '20px' }}
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="cursor-help opacity-70 hover:opacity-100 transition-opacity"
-        >
-          <circle cx="12" cy="12" r="7.5" stroke="#6D7380" />
-          <circle cx="12" cy="8.2832" r="0.75" fill="#6D7380" />
-          <rect x="11.25" y="10.166" width="1.5" height="6.30078" rx="0.75" fill="#6D7380" />
-        </svg>
-
-        <div
-          className="
-            absolute
-            top-full
-            right-0
-            mt-2
-            w-max
-            max-w-[370px]
-            p-2
-            rounded-lg
-            shadow-xl
-            opacity-0
-            group-hover:opacity-100
-            transition-opacity
-            duration-200
-            pointer-events-none
-          "
-          style={{ backgroundColor: COLORS.GRAY700 }}
-        >
-          <p
-            className="font-suit text-[12px] font-medium leading-[140%] text-left"
-            style={{ color: COLORS.GRAY300 }}
-          >
-            Circle size reflects the volume of proposals.<br />
-            Chains are categorized into four tiers based on their ranking.
-          </p>
-        </div>
-      </div>
-
       {showSkeleton ? (
         <div className="absolute inset-0 transition-opacity duration-300">
           <HempMapSkeleton showShimmer={true} />

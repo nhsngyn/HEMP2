@@ -12,9 +12,22 @@ import ChartTitle from './ChartTitle';
  * @param {string} maxHeight - 카드 최대 높이 (선택)
  * @param {boolean} noMaxHeight - 최대 높이 제한 제거 (선택)
  * @param {boolean} mobileNoMaxHeight - 모바일에서만 최대 높이 제한 제거 (선택)
+ * @param {boolean} showInfo - 인포메이션 아이콘 표시 여부 (선택)
+ * @param {string} infoText - 인포메이션 툴팁 텍스트 (선택)
  * @param {React.ReactNode} children - 차트 내용
  */
-const ChartCard = ({ number, title, height = "auto", minHeight, maxHeight, noMaxHeight = false, mobileNoMaxHeight = false, children }) => {
+const ChartCard = ({ 
+  number, 
+  title, 
+  height = "auto", 
+  minHeight, 
+  maxHeight, 
+  noMaxHeight = false, 
+  mobileNoMaxHeight = false, 
+  showInfo = false,
+  infoText = "",
+  children 
+}) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -40,6 +53,56 @@ const ChartCard = ({ number, title, height = "auto", minHeight, maxHeight, noMax
       }}
     >
       <ChartTitle number={number} title={title} />
+      
+      {/* 인포메이션 아이콘 (옵션) - 타이틀과 같은 높이 */}
+      {showInfo && (
+        <div 
+          className="absolute z-50 group"
+          style={{ top: '20px', right: '20px' }}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="cursor-help opacity-70 hover:opacity-100 transition-opacity"
+          >
+            <circle cx="12" cy="12" r="7.5" stroke="#6D7380" />
+            <circle cx="12" cy="8.2832" r="0.75" fill="#6D7380" />
+            <rect x="11.25" y="10.166" width="1.5" height="6.30078" rx="0.75" fill="#6D7380" />
+          </svg>
+
+          {infoText && (
+            <div
+              className="
+                absolute
+                top-full
+                right-0
+                mt-2
+                w-max
+                max-w-[370px]
+                p-2
+                rounded-lg
+                shadow-xl
+                opacity-0
+                group-hover:opacity-100
+                transition-opacity
+                duration-200
+                pointer-events-none
+              "
+              style={{ backgroundColor: COLORS.GRAY700 }}
+            >
+              <p
+                className="font-suit text-[12px] font-medium leading-[140%] text-left"
+                style={{ color: COLORS.GRAY300 }}
+                dangerouslySetInnerHTML={{ __html: infoText }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+      
       {children}
     </div>
   );

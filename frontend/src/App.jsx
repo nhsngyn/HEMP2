@@ -103,7 +103,14 @@ function App() {
             className="grid grid-cols-1 md:grid-cols-2 w-full items-stretch"
             style={{ gap: "12px" }}
           >
-            <ChartCard number={1} title="HEMP Map" minHeight="300px" maxHeight="400px">
+            <ChartCard 
+              number={1} 
+              title="HEMP Map" 
+              minHeight="300px" 
+              maxHeight="400px"
+              showInfo={true}
+              infoText="Circle size reflects the volume of proposals.<br />Chains are categorized into four tiers based on their ranking."
+            >
               <HempMap />
             </ChartCard>
 
