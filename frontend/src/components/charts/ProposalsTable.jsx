@@ -5,7 +5,7 @@ import useChainStore from '../../store/useChainStore';
 const ProposalsTable = ({ mainChain }) => {
   const { sankeyFilter } = useChainStore();
 
-  const propositions = useMemo(() => { // 메인 체인 데이터에서 프로포절 데이터를 가져옴
+  const propositions = useMemo(() => {
     if (!mainChain) return [];
 
     const mockData = {
@@ -31,21 +31,17 @@ const ProposalsTable = ({ mainChain }) => {
         const voteComposition = p.voteComposition || 'Consensus';
         const processingSpeed = p.processingSpeed || 'Normal';
 
-        // Type → Result
         if (sourceColumn === 0 && targetColumn === 1) {
           return propType === sourceName && result === targetName;
         }
-        // Result → Participation
         if (sourceColumn === 1 && targetColumn === 2) {
           const typeMatch = type ? propType === type : true;
           return result === sourceName && participationLevel === targetName && typeMatch;
         }
-        // Participation → Vote Composition
         if (sourceColumn === 2 && targetColumn === 3) {
           const typeMatch = type ? propType === type : true;
           return participationLevel === sourceName && voteComposition === targetName && typeMatch;
         }
-        // Vote Composition → Processing Speed
         if (sourceColumn === 3 && targetColumn === 4) {
           const typeMatch = type ? propType === type : true;
           return voteComposition === sourceName && processingSpeed === targetName && typeMatch;
@@ -94,7 +90,6 @@ const ProposalsTable = ({ mainChain }) => {
     return '-';
   };
 
-  // 타입 포맷팅: "Msg" 제거하고 대문자 기준 띄어쓰기
   const formatTypeForDisplay = (type) => {
     if (!type) return 'Other';
     if (type.startsWith('Msg')) {
@@ -208,7 +203,6 @@ const ProposalsTable = ({ mainChain }) => {
           </thead>
           <tbody>
             {filteredPropositions.map((prop, index) => (
-              /* Proposals Table */
               <tr
                 key={index}
                 className={` border-gray-800 hover:bg-gray-900/50 transition-colors ${index % 2 === 0 ? 'bg-transparent' : ''
@@ -218,8 +212,6 @@ const ProposalsTable = ({ mainChain }) => {
                   backgroundColor: index % 2 === 1 ? '#191C23' : 'transparent'
                 }}
               >
-
-                {/* ID */}
                 <td
                   className="text-gray-400"
                   style={{
@@ -232,8 +224,6 @@ const ProposalsTable = ({ mainChain }) => {
                 >
                   #{prop.id || (1000 + index)}
                 </td>
-
-                {/* Title */}
                 <td
                   className="max-w-md truncate"
                   style={{
@@ -247,7 +237,6 @@ const ProposalsTable = ({ mainChain }) => {
                 >
                   {prop.title || 'Proposal Title'}
                 </td>
-                {/* Type */}
                 <td
                   className="text-gray-200 font-bold"
                   style={{
@@ -296,8 +285,6 @@ const ProposalsTable = ({ mainChain }) => {
                     </span>
                   </span>
                 </td>
-
-                {/* Participation */}
                 <td
                   className="text-gray-300"
                   style={{
@@ -310,8 +297,6 @@ const ProposalsTable = ({ mainChain }) => {
                 >
                   {prop.participation || '0.00%'}
                 </td>
-
-                {/* Status */}
                 <td
                   className={getStatusColor(formatStatus(prop))}
                   style={{
@@ -325,8 +310,6 @@ const ProposalsTable = ({ mainChain }) => {
                 >
                   {formatStatus(prop)}
                 </td>
-
-                {/* Processing Time */}
                 <td
                   className="text-gray-400"
                   style={{
@@ -347,7 +330,6 @@ const ProposalsTable = ({ mainChain }) => {
         </div>
       </div>
 
-      {/* Blur hint - 오른쪽 끝에 고정되어 스크롤 힌트 제공 (모바일만) */}
       <div 
         className="md:hidden absolute pointer-events-none"
         style={{ 
