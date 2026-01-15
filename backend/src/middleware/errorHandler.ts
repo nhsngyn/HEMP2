@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 
 /**
- * Custom error class
+ * Custom HTTP Exception class for RESTful API error handling
+ * Allows precise status code control (400, 404, 500, etc.)
  */
-export class AppError extends Error {
+export class HttpException extends Error {
   statusCode: number;
   isOperational: boolean;
 
-  constructor(message: string, statusCode: number) {
+  constructor(statusCode: number, message: string) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = true;
@@ -17,10 +18,21 @@ export class AppError extends Error {
 }
 
 /**
+ * Legacy alias for backward compatibility
+ * @deprecated Use HttpException instead
+ */
+export class AppError extends HttpException {
+  constructor(message: string, statusCode: number) {
+    super(statusCode, message);
+  }
+}
+
+/**
  * Error handling middleware
+ * Distinguishes between client errors (400), not found (404), and server errors (500)
  */
 export const errorHandler = (
-  err: Error | AppError,
+  err: Error | HttpException,
   req: Request,
   res: Response,
   _next: NextFunction
@@ -28,7 +40,7 @@ export const errorHandler = (
   let statusCode = 500;
   let message = 'Internal Server Error';
 
-  if (err instanceof AppError) {
+  if (err instanceof HttpException) {
     statusCode = err.statusCode;
     message = err.message;
   } else if (err instanceof Error) {
@@ -36,6 +48,7 @@ export const errorHandler = (
   }
 
   console.error('[ERROR]', {
+    statusCode,
     message: err.message,
     stack: err.stack,
     url: req.url,

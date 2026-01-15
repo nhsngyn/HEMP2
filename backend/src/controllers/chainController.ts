@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as chainService from '../services/chainService';
 import { ChainFilters, PropositionFilters } from '../models/types';
+import { HttpException } from '../middleware/errorHandler';
 
 /**
  * Get all chains
@@ -8,9 +9,26 @@ import { ChainFilters, PropositionFilters } from '../models/types';
  */
 export const getAllChains = async (req: Request, res: Response): Promise<void> => {
   try {
+    // 📌 Validate query parameters
+    const minScore = req.query.minScore ? Number(req.query.minScore) : undefined;
+    const maxScore = req.query.maxScore ? Number(req.query.maxScore) : undefined;
+    
+    // Check for invalid numbers
+    if (minScore !== undefined && (isNaN(minScore) || minScore < 0 || minScore > 100)) {
+      throw new HttpException(400, 'minScore must be a number between 0 and 100');
+    }
+    
+    if (maxScore !== undefined && (isNaN(maxScore) || maxScore < 0 || maxScore > 100)) {
+      throw new HttpException(400, 'maxScore must be a number between 0 and 100');
+    }
+    
+    if (minScore !== undefined && maxScore !== undefined && minScore > maxScore) {
+      throw new HttpException(400, 'minScore cannot be greater than maxScore');
+    }
+    
     const filters: ChainFilters = {
-      minScore: req.query.minScore ? Number(req.query.minScore) : undefined,
-      maxScore: req.query.maxScore ? Number(req.query.maxScore) : undefined,
+      minScore,
+      maxScore,
       search: req.query.search as string | undefined
     };
     
@@ -22,11 +40,13 @@ export const getAllChains = async (req: Request, res: Response): Promise<void> =
       count: chains.length
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch chains',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    });
+    // If it's already an HttpException, rethrow it
+    if (error instanceof HttpException) {
+      throw error;
+    }
+    
+    // Otherwise, it's a server error
+    throw new HttpException(500, 'Failed to fetch chains');
   }
 };
 
@@ -36,14 +56,16 @@ export const getAllChains = async (req: Request, res: Response): Promise<void> =
 export const getChainById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    
+    // Validate ID format
+    if (!id || id.trim() === '') {
+      throw new HttpException(400, 'Chain ID is required');
+    }
+    
     const chain = await chainService.getChainById(id);
     
     if (!chain) {
-      res.status(404).json({
-        success: false,
-        error: 'Chain not found'
-      });
-      return;
+      throw new HttpException(404, `Chain with ID '${id}' not found`);
     }
     
     res.json({
@@ -51,11 +73,10 @@ export const getChainById = async (req: Request, res: Response): Promise<void> =
       data: chain
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch chain',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    });
+    if (error instanceof HttpException) {
+      throw error;
+    }
+    throw new HttpException(500, 'Failed to fetch chain');
   }
 };
 
@@ -66,6 +87,17 @@ export const getChainById = async (req: Request, res: Response): Promise<void> =
 export const getChainPropositions = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    
+    // Validate ID
+    if (!id || id.trim() === '') {
+      throw new HttpException(400, 'Chain ID is required');
+    }
+    
+    // Verify chain exists
+    const chain = await chainService.getChainById(id);
+    if (!chain) {
+      throw new HttpException(404, `Chain with ID '${id}' not found`);
+    }
     
     const filters: PropositionFilters = {
       type: req.query.type as string | undefined,
@@ -83,11 +115,10 @@ export const getChainPropositions = async (req: Request, res: Response): Promise
       count: propositions.length
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch propositions',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    });
+    if (error instanceof HttpException) {
+      throw error;
+    }
+    throw new HttpException(500, 'Failed to fetch propositions');
   }
 };
 
@@ -103,10 +134,9 @@ export const getChainStatistics = async (_req: Request, res: Response): Promise<
       data: stats
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch statistics',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    });
+    if (error instanceof HttpException) {
+      throw error;
+    }
+    throw new HttpException(500, 'Failed to fetch statistics');
   }
 };

@@ -5,6 +5,7 @@ import {
   getChainPropositions,
   getChainStatistics 
 } from '../controllers/chainController';
+import { asyncHandler } from '../middleware/errorHandler';
 
 const router = Router();
 
@@ -14,21 +15,21 @@ const router = Router();
  * @query   minScore, maxScore, search
  * @access  Public
  */
-router.get('/', getAllChains);
+router.get('/', asyncHandler(getAllChains));
 
 /**
  * @route   GET /api/chains/statistics
  * @desc    Get chain statistics
  * @access  Public
  */
-router.get('/statistics', getChainStatistics);
+router.get('/statistics', asyncHandler(getChainStatistics));
 
 /**
  * @route   GET /api/chains/:id
  * @desc    Get chain by ID
  * @access  Public
  */
-router.get('/:id', getChainById);
+router.get('/:id', asyncHandler(getChainById));
 
 /**
  * @route   GET /api/chains/:id/propositions
@@ -36,6 +37,6 @@ router.get('/:id', getChainById);
  * @query   type, result, participationLevel, voteComposition, processingSpeed
  * @access  Public
  */
-router.get('/:id/propositions', getChainPropositions);
+router.get('/:id/propositions', asyncHandler(getChainPropositions));
 
 export default router;

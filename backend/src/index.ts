@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import chainRoutes from './routes/chainRoutes';
+import adminRoutes from './routes/adminRoutes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -38,6 +39,7 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // API Routes
 app.use('/api/chains', chainRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 handler (must be after all routes)
 app.use(notFoundHandler);
