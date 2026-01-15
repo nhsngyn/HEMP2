@@ -313,11 +313,14 @@ const HempMap = () => {
 
   return (
     <div className="w-full h-full relative">
-      {/* 인포메이션 툴팁 영역 (기존 유지) */}
-      <div className="absolute top-5 right-5 z-50 group">
+      {/* 인포메이션 툴팁 영역 - 타이틀과 같은 높이로 정렬 */}
+      <div 
+        className="absolute z-50 group"
+        style={{ top: '20px', right: '20px' }}
+      >
         <svg
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

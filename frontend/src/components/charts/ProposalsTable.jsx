@@ -121,12 +121,13 @@ const ProposalsTable = ({ mainChain }) => {
         </h2> <span className="text-gray-500" style={{ fontSize: '18px', lineHeight: '145%', letterSpacing: '-0.01em', fontWeight: '600' }}> {filteredPropositions.length}</span>
       </div>
 
-      <div 
-        className="overflow-x-auto scrollbar-hide flex-1 min-h-0 relative"
-        style={{ transform: 'rotateX(180deg)' }}
-      >
-        <div style={{ transform: 'rotateX(180deg)' }}>
-          <table className="w-full">
+      <div className="overflow-x-auto scrollbar-hide flex-1 min-h-0 relative">
+        <div 
+          className="relative"
+          style={{ transform: 'rotateX(180deg)' }}
+        >
+          <div style={{ transform: 'rotateX(180deg)' }}>
+            <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800 ">
               <th
@@ -341,18 +342,18 @@ const ProposalsTable = ({ mainChain }) => {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+          </div>
         </div>
 
-        {/* Blur hint - 오른쪽에 더 많은 내용이 있음을 표시 */}
+        {/* Blur hint - 오른쪽에 더 많은 내용이 있음을 표시 (모바일만) */}
         <div 
-          className="md:hidden absolute right-0 top-0 bottom-0 pointer-events-none"
+          className="md:hidden absolute top-0 bottom-0 pointer-events-none"
           style={{ 
-            width: '20px',
-            background: 'linear-gradient(to left, rgba(23, 23, 23, 0.95), transparent)',
-            backdropFilter: 'blur(2px)',
-            WebkitBackdropFilter: 'blur(2px)',
-            transform: 'rotateX(180deg)' // 부모와 같은 회전 적용
+            right: 0,
+            width: '40px',
+            background: 'linear-gradient(to left, rgba(23, 23, 23, 0.98), rgba(23, 23, 23, 0.5), transparent)',
+            zIndex: 10
           }}
         />
       </div>

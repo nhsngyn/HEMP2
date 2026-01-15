@@ -40,7 +40,7 @@ const useChainSelection = () => {
       return removeChainById(chainId);
     } else {
       // 선택되지 않은 체인이면 빈 슬롯에 자동 배치
-      return applySelection(chainId, null);
+    return applySelection(chainId, null);
     }
   };
 
