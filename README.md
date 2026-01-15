@@ -163,6 +163,8 @@ npm run dev
 - **Node.js**: 런타임
 - **Express**: 웹 프레임워크
 - **TypeScript**: 타입 안정성
+- **Jest**: 단위 테스트 프레임워크
+- **ts-jest**: TypeScript Jest 지원
 - **Helmet**: 보안 미들웨어
 - **Morgan**: 로깅 미들웨어
 - **CORS**: 크로스 오리진 리소스 공유
@@ -248,12 +250,144 @@ npm run dev
 3. `backend/src/services/` 에 비즈니스 로직
 4. Frontend `store/` 에서 API 호출
 
+### 테스트 실행
+```bash
+# 백엔드 단위 테스트 실행
+cd backend
+npm test
+
+# 테스트 + 커버리지 확인
+npm run test:coverage
+
+# Watch 모드로 테스트 실행
+npm run test:watch
+```
+
 ## ⚡ 성능 최적화
 
 - **Skeleton UI**: 로딩 중 300ms 페이드 전환
 - **useMemo**: 차트 데이터 계산 메모이제이션
 - **CSS 변수**: 스케일 계산 최적화
 - **가로 스크롤**: 큰 차트 성능 유지
+
+## 🔐 Admin API
+
+### 데이터 갱신 API
+백엔드 서버에서 캐시된 체인/프로포절 데이터를 갱신할 수 있는 관리자용 API를 제공합니다.
+
+#### 1. 데이터 새로고침
+```bash
+POST /api/admin/refresh-data
+Headers:
+  X-Admin-API-Key: your-admin-key
+
+Response:
+{
+  "success": true,
+  "message": "Data refreshed successfully",
+  "data": {
+    "chainsLoaded": 18,
+    "propositionsLoaded": 1250,
+    "timestamp": "2026-01-15T12:00:00.000Z"
+  }
+}
+```
+
+#### 2. 시스템 상태 확인
+```bash
+GET /api/admin/status
+Headers:
+  X-Admin-API-Key: your-admin-key
+
+Response:
+{
+  "success": true,
+  "data": {
+    "status": "operational",
+    "uptime": 3600,
+    "environment": "production",
+    "cache": {
+      "chainsCount": 18,
+      "propositionsCount": 1250
+    },
+    "timestamp": "2026-01-15T12:00:00.000Z"
+  }
+}
+```
+
+#### Admin API Key 설정
+1. 백엔드 `.env` 파일에 `ADMIN_API_KEY` 추가
+2. 프로덕션 환경에서는 반드시 강력한 키로 변경
+3. 환경 변수가 없으면 기본값 `hemp2-admin-dev-key` 사용 (개발용)
+
+```bash
+# .env 예시
+ADMIN_API_KEY=your-secure-admin-key-here-2026
+```
+
+## 🧪 테스트
+
+### 백엔드 단위 테스트
+- **테스트 프레임워크**: Jest + ts-jest
+- **테스트 대상**: `chainService` (핵심 비즈니스 로직)
+- **테스트 커버리지**: 13개 테스트 케이스
+
+#### 주요 테스트 시나리오
+1. ✅ 필터링 없이 모든 체인 조회
+2. ✅ minScore/maxScore로 점수 범위 필터링
+3. ✅ 검색어로 체인 이름/ID 검색
+4. ✅ 여러 필터 조합 (minScore + search)
+5. ✅ 존재하는 체인 ID로 단일 체인 조회
+6. ✅ 존재하지 않는 체인 ID 처리
+7. ✅ 통계 데이터 검증 (평균 점수, 분포도)
+8. ✅ 프로포절 필터링 (타입, 결과, 참여도 등)
+
+```bash
+# 테스트 실행
+cd backend
+npm test
+
+# 결과 예시
+PASS  src/services/__tests__/chainService.test.ts
+  chainService
+    getAllChains
+      ✓ should return all chains without filters (4 ms)
+      ✓ should filter chains by minScore
+      ✓ should filter chains by maxScore
+      ...
+Test Suites: 1 passed, 1 total
+Tests:       13 passed, 13 total
+```
+
+## 🎯 코드 품질 개선사항
+
+### 1. **RESTful API 에러 처리**
+- ❌ **Before**: 모든 에러를 500 Internal Server Error로 처리
+- ✅ **After**: 상황별 적절한 HTTP 상태 코드 반환
+  - `400 Bad Request`: 잘못된 요청 파라미터
+  - `404 Not Found`: 존재하지 않는 리소스
+  - `500 Internal Server Error`: 서버 내부 오류
+
+**HttpException 클래스 도입**
+```typescript
+// 체인이 존재하지 않는 경우
+throw new HttpException(404, `Chain with ID '${id}' not found`);
+
+// 잘못된 파라미터
+throw new HttpException(400, 'minScore must be a number between 0 and 100');
+```
+
+### 2. **단위 테스트 (Unit Tests)**
+- ✅ Jest 기반 테스트 환경 구축
+- ✅ 핵심 비즈니스 로직 검증
+- ✅ 데이터 무결성 보장
+- ✅ 회귀 버그 방지
+
+### 3. **데이터 갱신 자동화**
+- ✅ Admin API를 통한 원격 데이터 갱신
+- ✅ 수동 스크립트 실행 불필요
+- ✅ API Key 기반 보안 인증
+- ✅ 시스템 상태 모니터링 가능
 
 ## 🐛 알려진 이슈
 
@@ -275,6 +409,12 @@ MIT License
 ---
 
 ## 📈 버전 히스토리
+
+### v2.1.0 (2026-01-15) 🆕
+- ✅ **RESTful API 에러 처리 개선**: HttpException 클래스 도입
+- ✅ **단위 테스트 구현**: Jest 기반 13개 테스트 케이스 작성
+- ✅ **Admin API 추가**: 데이터 갱신 자동화 엔드포인트
+- ✅ **코드 품질 향상**: 400/404/500 상태 코드 구분
 
 ### v2.0.0 (2025-01-06)
 - ✅ Backend/Frontend 분리
