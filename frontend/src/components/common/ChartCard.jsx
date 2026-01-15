@@ -54,7 +54,6 @@ const ChartCard = ({
     >
       <ChartTitle number={number} title={title} />
       
-      {/* 인포메이션 아이콘 (옵션) - 타이틀과 같은 높이 */}
       {showInfo && (
         <div 
           className="absolute group"
@@ -103,7 +102,6 @@ const ChartCard = ({
         </div>
       )}
       
-      {/* 차트 콘텐츠 영역 - overflow-hidden 적용 */}
       <div className="overflow-hidden" style={{ height: '100%', width: '100%' }}>
         {children}
       </div>
