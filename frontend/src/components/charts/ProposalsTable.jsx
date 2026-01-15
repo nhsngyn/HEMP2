@@ -107,7 +107,7 @@ const ProposalsTable = ({ mainChain }) => {
 
   return (
     <div
-      className="w-full h-full  rounded-lg shadow-lg flex flex-col"
+      className="w-full h-full  rounded-lg shadow-lg flex flex-col relative"
       style={{
         padding: '24px'
       }}
@@ -345,18 +345,20 @@ const ProposalsTable = ({ mainChain }) => {
           </table>
           </div>
         </div>
-
-        {/* Blur hint - 오른쪽에 더 많은 내용이 있음을 표시 (모바일만) */}
-        <div 
-          className="md:hidden absolute top-0 bottom-0 pointer-events-none"
-          style={{ 
-            right: 0,
-            width: '40px',
-            background: 'linear-gradient(to left, rgba(23, 23, 23, 0.98), rgba(23, 23, 23, 0.5), transparent)',
-            zIndex: 10
-          }}
-        />
       </div>
+
+      {/* Blur hint - 오른쪽 끝에 고정되어 스크롤 힌트 제공 (모바일만) */}
+      <div 
+        className="md:hidden absolute pointer-events-none"
+        style={{ 
+          top: '60px', // 타이틀 높이만큼 아래에서 시작
+          right: '24px', // 카드 패딩만큼 안쪽
+          bottom: '24px', // 카드 패딩만큼 위쪽
+          width: '40px',
+          background: 'linear-gradient(to left, rgba(23, 23, 23, 0.98), rgba(23, 23, 23, 0.5), transparent)',
+          zIndex: 10
+        }}
+      />
     </div>
   );
 };
