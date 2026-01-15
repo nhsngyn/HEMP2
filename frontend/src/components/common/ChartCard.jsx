@@ -77,9 +77,9 @@ const ChartCard = ({
             <div
               className="
                 absolute
-                top-full
+                bottom-full
                 right-0
-                mt-2
+                mb-2
                 w-max
                 max-w-[370px]
                 p-2
