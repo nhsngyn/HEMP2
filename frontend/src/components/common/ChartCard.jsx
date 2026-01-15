@@ -42,7 +42,7 @@ const ChartCard = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl shadow-lg ${shouldRemoveMaxHeight ? 'max-h-none' : ''}`}
+      className={`relative rounded-2xl shadow-lg ${shouldRemoveMaxHeight ? 'max-h-none' : ''}`}
       style={{ 
         backgroundColor: COLORS.GRAYBG,
         padding: "20px",
@@ -57,8 +57,8 @@ const ChartCard = ({
       {/* 인포메이션 아이콘 (옵션) - 타이틀과 같은 높이 */}
       {showInfo && (
         <div 
-          className="absolute z-50 group"
-          style={{ top: '20px', right: '20px' }}
+          className="absolute group"
+          style={{ top: '20px', right: '20px', zIndex: 9999 }}
         >
           <svg
             width="20"
@@ -91,7 +91,7 @@ const ChartCard = ({
                 duration-200
                 pointer-events-none
               "
-              style={{ backgroundColor: COLORS.GRAY700 }}
+              style={{ backgroundColor: COLORS.GRAY700, zIndex: 9999 }}
             >
               <p
                 className="font-suit text-[12px] font-medium leading-[140%] text-left"
@@ -103,7 +103,10 @@ const ChartCard = ({
         </div>
       )}
       
-      {children}
+      {/* 차트 콘텐츠 영역 - overflow-hidden 적용 */}
+      <div className="overflow-hidden" style={{ height: '100%', width: '100%' }}>
+        {children}
+      </div>
     </div>
   );
 };
