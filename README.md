@@ -4,7 +4,9 @@ Health Evaluation Metric using Proposals
 
 블록체인 거버넌스 데이터를 기반으로 체인의 ‘건강도’를 정량적으로 분석하고 시각화하는 웹 대시보드
 
-[Badges: Live Demo / Backend API / GitHub Repo]
+[![Live Demo](https://img.shields.io/badge/Live-Demo-93E729?style=for-the-badge&logo=vercel)](https://hemp2.vercel.app/)
+[![Backend API](https://img.shields.io/badge/API-Running-3CA7C4?style=for-the-badge&logo=node.js)](https://hemp2.onrender.com/health)
+[![Github](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github)](https://github.com/nhsngyn/HEMP2)
 
 > UX Performance Update
 > 사용자 경험 최적화를 위해 서버 인스턴스를 업그레이드했습니다.
@@ -102,16 +104,27 @@ Score(건강도)와 Participation(참여도) 매트릭스를 분석합니다. �
 
 ---
 
-## Project History
+## Project Role & Contribution
 
-### HEMP v1.0 (Team Project)
-- Role: Tech Lead & Frontend (4인 팀)
-- 초기 아키텍처 설계, 데이터 전처리 파이프라인 구축, 핵심 인터랙션 구현
+### HEMP v1.0 (Team Project / 5 Members)
+Role: Tech Lead & Frontend Developer
 
-### HEMP v2.0 (Solo Development)
-- Role: Full-Stack Developer (1인 개발)
-- Node.js 백엔드 서버 구축, REST API 설계
-- 모바일 반응형 디자인 적용, 테스트 코드(Jest) 작성 및 리팩토링
+팀 내 기술 리드로서 초기 개발 환경을 구축하고, 팀원들이 효율적으로 협업할 수 있는 기반 아키텍처를 설계했습니다. 데이터 파이프라인과 핵심 인터랙션 기능을 전담하여 프로젝트의 기술적 완성도를 높였습니다.
+
+- Initial Architecture Design: 컴포넌트, Hook, Store의 의존성을 분리한 폴더 구조 설계 및 개발 컨벤션 수립
+- Data Pipeline Construction: 백엔드 부재 상황을 해결하기 위해 Node.js 기반의 ETL(Extract-Transform-Load) 스크립트를 작성하여 Raw Data 전처리 자동화 (process-all-csv.cjs)
+- Core State Management: Zustand를 활용하여 체인 선택(Slot) 및 랭킹 로직의 전역 상태 관리 설계
+- Interactive UI Implementation: @dnd-kit을 활용한 Drag & Drop 랭킹 시스템 및 Bubble Chart(HEMP Map) 시각화 구현
+
+### HEMP2 v2.0 (Solo Project)
+Role: Full-Stack Developer
+
+팀 프로젝트 결과물을 바탕으로 백엔드 서버를 신규 구축하고, 사용자 경험(UX)과 성능을 개선하여 독립적인 서비스로 고도화했습니다.
+
+- Backend Server Development: Node.js/Express 기반의 REST API 서버 구축 및 데이터 서빙 구조 개선
+- Performance Optimization: 클라우드 서버 인스턴스 업그레이드 및 렌더링 최적화를 통해 초기 진입 지연(Cold Start) 문제 해결
+- Refactoring & Testing: 유지보수성을 고려한 코드 리팩토링 수행 및 핵심 비즈니스 로직에 대한 단위 테스트(Jest) 적용
+- Responsive Design: 모바일 환경에서도 쾌적한 데이터 분석이 가능하도록 반응형 레이아웃 및 UX 개선
 
 ---
 
