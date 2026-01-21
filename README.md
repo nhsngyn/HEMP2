@@ -1,4 +1,4 @@
-# 🌿 HEMP2
+#  HEMP2
 
 **Health Evaluation Metric using Proposals**
 
