@@ -6,14 +6,18 @@
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-93E729?style=for-the-badge\&logo=vercel)](https://hemp2.vercel.app/)
-[![Backend API](https://img.shields.io/badge/API-Running-3CA7C4?style=for-the-badge\&logo=node.js)](https://hemp2.onrender.com/health)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-93E729?style=for-the-badge&logo=vercel)](https://hemp2.vercel.app/)
+[![Backend API](https://img.shields.io/badge/API-Running-3CA7C4?style=for-the-badge&logo=node.js)](https://hemp2.onrender.com/health)
+
+<br/>
+<p align="center">
+  <b>⚡️ Performance Update:</b> 서버 업그레이드로 Cold Start 대기 시간 없이 <b>즉시 접속 가능</b>합니다.
+</p>
 
 </div>
-
 ---
 
-## 🧐 프로젝트 개요
+##  프로젝트 개요
 
 **“가격과 TVL이 높으면, 그 블록체인은 정말 건강하다고 볼 수 있을까?”**
 
@@ -24,7 +28,7 @@
 체인의 내부 운영 상태를 여러 지표로 나누어 분석하고 이를 시각화한 프로젝트입니다.
 각 체인이 얼마나 활발하게 참여되고, 얼마나 안정적으로 합의가 이루어지는지를 한눈에 비교할 수 있도록 설계했습니다.
 
-### 📊 프로젝트 규모
+###  프로젝트 규모
 
 * **분석 대상**: Cosmos 생태계 내 18개 주요 블록체인
 * **수집 데이터**: 약 5,000건 이상의 온체인 거버넌스 제안
@@ -33,33 +37,33 @@
 
 ---
 
-## ✨ 주요 기능
+##  주요 기능
 
-### 1️⃣ HEMP Rank (사이드바)
+### 1. HEMP Rank (사이드바)
 
 * 18개 체인의 **종합 건강도 점수(0~100)** 기반 랭킹 제공
 * **드래그 앤 드롭**으로 비교 체인 선택 (Main / Sub1 / Sub2)
 * 선택 상태를 URL 쿼리로 동기화하여 결과 공유 가능
 
-### 2️⃣ HEMP Map (버블 차트)
+### 2. HEMP Map (버블 차트)
 
 * **Score(건강도)** × **Participation(참여도)** 기준 포지셔닝
 * 버블 크기는 Proposal 수량을 의미
 * 클릭으로 체인 선택 및 해제
 
-### 3️⃣ Radar Comparison (레이더 차트)
+### 3. Radar Comparison (레이더 차트)
 
 * 최대 **3개 체인**의 세부 지표 비교
 * 5가지 핵심 지표를 레이더 차트로 시각화
 * 모바일에서는 세로, 데스크톱에서는 가로 배치
 
-### 4️⃣ Governance Flow (생키 차트)
+### 4. Governance Flow (생키 차트)
 
 * Proposal의 **Type → Status → Participation → Vote → Speed** 흐름 시각화
 * 링크 클릭을 통한 필터링
 * 모바일 환경에서 가로 스크롤 지원
 
-### 5️⃣ Proposals Table
+### 5. Proposals Table
 
 * 선택된 체인의 Proposal 상세 정보 제공
 * 생키 차트 필터와 연동
@@ -67,7 +71,7 @@
 
 ---
 
-## 📊 HEMP Scoring Logic (5 Metrics)
+##  HEMP Scoring Logic (5 Metrics)
 
 약 **5,000건 이상의 온체인 거버넌스 데이터**를 수집·전처리하여
 아래 5가지 지표를 기준으로 체인별 점수를 계산했습니다.
@@ -85,7 +89,7 @@
 
 ---
 
-## 🛠 기술 스택
+##  기술 스택
 
 ### Frontend
 
@@ -112,7 +116,7 @@
 
 ---
 
-## 🎯 핵심 구현 포인트
+##  핵심 구현 포인트
 
 * RESTful API 기준에 맞춘 에러 처리 및 상태 코드 설계
 * Jest 기반 단위 테스트로 핵심 로직 검증
@@ -123,7 +127,7 @@
 
 ---
 
-## 📂 프로젝트 히스토리
+##  프로젝트 히스토리
 
 ### HEMP (v1.0)
 
@@ -140,7 +144,7 @@
 
 ---
 
-## 🔗 링크
+##  링크
 
 * **Live Demo**: [https://hemp2.vercel.app/](https://hemp2.vercel.app/)
 * **Backend API**: [https://hemp2.onrender.com/health](https://hemp2.onrender.com/health)
@@ -148,7 +152,7 @@
 
 ---
 
-## 👩‍💻 Developer
+## Developer
 
 **Noh Sungyeon**
 Frontend / Data Visualization / Backend
